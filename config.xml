@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gateway devMode="true" host="192.168.1.100" port="5555">
+    <description>
+        kh-h1100
+    </description>
+
+    <nodes>
+        <node nodeName="testSensorNode" deviceAddr="0x40"></node>
+    </nodes>
+</gateway>
