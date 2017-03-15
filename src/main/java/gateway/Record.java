@@ -6,7 +6,7 @@ package gateway;
 //import javax.persistence.Id;
 
 //@Entity
-public class Record {
+public class Record   {
 
     //@Id
     //@GeneratedValue(strategy = GenerationType.AUTO)
@@ -30,4 +30,5 @@ public class Record {
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
+
 }

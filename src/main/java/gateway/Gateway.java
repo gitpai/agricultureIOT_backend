@@ -1,30 +1,67 @@
 package gateway;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+import javax.persistence.*;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.*;
 import java.net.Socket;
 import java.util.*;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.DocumentBuilder;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.Node;
-
-import java.io.File;
-
 
 // 一个网关可连最多64个Zigbee节点
 // 一个Zigbee节点最多接32个传感器或线圈
+@Entity
+@Table(name="T_ZIGBEE_NODE")
 class ZigbeeNode {
-
+    private Long id;
     byte deviceAddr;
     String nodeName;
+    @OneToMany(mappedBy="node")
     List<CoilOrSensor> coilOrSensors;
     boolean online;
+    boolean valid;
 
     public ZigbeeNode(byte deviceAddr, String nodeName) {
+        this.coilOrSensors = new ArrayList<>();
         this.deviceAddr = deviceAddr;
         this.nodeName = nodeName;
+    }
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    public Long getId() {
+        return id;
+    }
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    @Column(name="NODE_ADDR")
+    public byte getDeviceAddr() {
+        return deviceAddr;
+    }
+
+    public void setDeviceAddr(byte deviceAddr) {
+        this.deviceAddr = deviceAddr;
+    }
+    @Column(name="NODE_NAME")
+    public String getNodeName() {
+        return nodeName;
+    }
+
+    public void setNodeName(String nodeName) {
+        this.nodeName = nodeName;
+    }
+
+    public List<CoilOrSensor> getCoilOrSensors() {
+        return coilOrSensors;
+    }
+
+    public void setCoilOrSensors(List<CoilOrSensor> coilOrSensors) {
+        this.coilOrSensors = coilOrSensors;
     }
 
     public void dumpSensors() {
@@ -54,7 +91,7 @@ class ZigbeeNode {
             throw new IOException("invalid response byte count");
         }
         for (int i = 0; i < 8; i++) {
-            coilOrSensors.add(new CoilOrSensor(Arrays.copyOfRange(packet.data, i * 4 + 1, i * 4 + 5)));
+            coilOrSensors.add(new CoilOrSensor(this,Arrays.copyOfRange(packet.data, i * 4 + 1, i * 4 + 5)));
         }
     }
 
@@ -81,13 +118,36 @@ class ZigbeeNode {
         }
 
     }
+
+    void persist() {
+        EntityManagerFactory factory = Persistence.createEntityManagerFactory("thePersistenceUnit");
+        EntityManager entityManager = factory.createEntityManager();
+        entityManager.getTransaction().begin();
+        entityManager.persist(this);
+        entityManager.getTransaction().commit();
+
+    }
 }
 
 //开关量或传感器
 class CoilOrSensor {
+    @Id
+    @GeneratedValue
+    Long id;
+
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="NODE_ID")
+    ZigbeeNode node;
+
+    @Column(name="SENSOR_TYPE")
     byte sensorType;
+
+    @Column(name="DATA_TYPE")
     byte dataType;
+
+    @Column(name="VALUE")
     short value;
+
     public static Map<Integer,String> sensorTypeMap = new HashMap<Integer,String>();
     static {
         //TODO: table not complete
@@ -96,7 +156,8 @@ class CoilOrSensor {
         sensorTypeMap.put(0x03,"照度");
     }
 
-    public CoilOrSensor(byte[] data) throws IOException {
+    public CoilOrSensor(ZigbeeNode node, byte[] data) throws IOException {
+        this.node = node;
         this.sensorType = data[0];
         this.dataType = data[1];
         this.value = 0;
@@ -115,17 +176,17 @@ class CoilOrSensor {
 public class Gateway implements Runnable {
     OutputStream out = null;
     DataInputStream in = null;
-    Socket client = null;
-    List<ZigbeeNode> zigbeeNodes;
+    public Socket client = null;
+    public List<ZigbeeNode> zigbeeNodes;
     boolean devMode;
     String host;
     int port;
 
     public Gateway(String filePath) throws IOException {
         this.parseConfig(filePath);
-        client = new Socket(host, port);
-        out = new DataOutputStream(client.getOutputStream());
-        in = new DataInputStream(client.getInputStream());
+        //client = new Socket(host, port);
+        //out = new DataOutputStream(client.getOutputStream());
+        //in = new DataInputStream(client.getInputStream());
     }
 
 
@@ -176,6 +237,12 @@ public class Gateway implements Runnable {
     @Override
     public void run() {
         try {
+            System.out.println("running");
+            this.readNodesDummy();
+            this.zigbeeNodes.forEach(zigbeeNode -> {
+                zigbeeNode.persist();
+            });
+/*
             byte[] online = readOnlineStatus();
             if(devMode) {
                 System.out.println("onlineStatus:" + Integer.toBinaryString(online[0]) +
@@ -193,9 +260,50 @@ public class Gateway implements Runnable {
                     zigbeeNode.dumpSensors();
                 }
             }
+            */
         } catch (IOException e) {
             System.out.println(" gateway failed, reason: " + e.getMessage());
         }
+    }
+
+    public void readNodesDummy() throws IOException {
+        zigbeeNodes.forEach(zigbeeNode -> {
+            try {
+                zigbeeNode.coilOrSensors.add(new CoilOrSensor(zigbeeNode, new byte[]{
+                        (byte) 0xA1, (byte) 0x81, 0x00, 0x44
+                }));
+
+                zigbeeNode.coilOrSensors.add(new CoilOrSensor(zigbeeNode, new byte[]{
+                        (byte) 0xA1, (byte) 0x81, 0x00, 0x34
+                }));
+                zigbeeNode.coilOrSensors.add(new CoilOrSensor(zigbeeNode, new byte[]{
+                        (byte) 0xA1, (byte) 0x81, 0x00, 0x24
+                }));
+                zigbeeNode.coilOrSensors.add(new CoilOrSensor(zigbeeNode, new byte[]{
+                        (byte) 0xA1, (byte) 0x81, 0x00, 0x14
+                }));
+                zigbeeNode.coilOrSensors.add(new CoilOrSensor(zigbeeNode, new byte[]{
+                        (byte) 0xA1, (byte) 0x81, 0x00, 0x04
+                }));
+                if(devMode) {
+                    System.out.println(zigbeeNode);
+                }
+
+            }catch (IOException e) {
+
+            }
+        });
+    }
+    public void readNodes() throws IOException {
+        zigbeeNodes.forEach( zigbeeNode -> {
+            zigbeeNode.valid = false;
+            try {
+                zigbeeNode.readNodeSensors(out, in);
+                zigbeeNode.valid = true;
+            }catch (IOException e) {
+                zigbeeNode.valid = false;
+            }
+        });
     }
 
 

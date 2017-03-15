@@ -1,8 +1,21 @@
+
 group 'com.zhangfuwen'
 version '1.0-SNAPSHOT'
-
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.5.2.RELEASE")
+    }
+}
+repositories {
+    mavenCentral()
+    maven { url "https://repository.jboss.org/nexus/content/repositories/releases" }
+}
 apply plugin: 'java'
 apply plugin: 'java-library-distribution'
+apply plugin: 'org.springframework.boot'
 
 sourceCompatibility = 1.8
 
@@ -12,6 +25,12 @@ repositories {
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
+    // https://mvnrepository.com/artifact/javax.persistence/persistence-api
+    compile group: 'javax.persistence', name: 'persistence-api', version: '1.0.2'
+
+    compile("org.springframework.boot:spring-boot-starter-data-jpa")
+    compile("com.h2database:h2")
+    compile("mysql:mysql-connector-java:5.1.37")
 }
 
 // Task "distZip" added by plugin "java-library-distribution":
@@ -25,5 +44,10 @@ jar {
         attributes 'Main-Class': 'gateway.Application',
                 'Class-Path': configurations.runtime.files.collect { "lib/$it.name" }.join(' ')
     }
+}
+
+task copyToLib(type: Copy) {
+    into "$buildDir/output/lib"
+    from configurations.runtime
 }
 
