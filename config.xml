@@ -3,7 +3,6 @@
     <description>
         kh-h1100
     </description>
-
     <nodes>
         <node nodeName="testSensorNode" deviceAddr="0x40"></node>
     </nodes>
