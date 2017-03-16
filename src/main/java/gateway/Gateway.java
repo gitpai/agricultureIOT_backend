@@ -16,11 +16,19 @@ import java.util.*;
 @Entity
 @Table(name="T_ZIGBEE_NODE")
 class ZigbeeNode {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
+    @Column(name="NODE_ADDR")
     byte deviceAddr;
+
+    @Column(name="NODE_NAME")
     String nodeName;
-    @OneToMany(mappedBy="node")
+
+    @OneToMany(targetEntity = CoilOrSensor.class, mappedBy="node")
     List<CoilOrSensor> coilOrSensors;
+
     boolean online;
     boolean valid;
 
@@ -30,8 +38,7 @@ class ZigbeeNode {
         this.nodeName = nodeName;
     }
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+
     public Long getId() {
         return id;
     }
@@ -39,7 +46,7 @@ class ZigbeeNode {
         this.id = id;
     }
 
-    @Column(name="NODE_ADDR")
+
     public byte getDeviceAddr() {
         return deviceAddr;
     }
@@ -47,7 +54,6 @@ class ZigbeeNode {
     public void setDeviceAddr(byte deviceAddr) {
         this.deviceAddr = deviceAddr;
     }
-    @Column(name="NODE_NAME")
     public String getNodeName() {
         return nodeName;
     }
@@ -130,6 +136,8 @@ class ZigbeeNode {
 }
 
 //开关量或传感器
+@Entity
+@Table(name="T_SENSOR")
 class CoilOrSensor {
     @Id
     @GeneratedValue
