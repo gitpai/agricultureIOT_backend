@@ -31,6 +31,8 @@ class ZigbeeNode {
     boolean online;
     boolean valid;
 
+    public ZigbeeNode(){}
+
     public ZigbeeNode(byte deviceAddr, String nodeName) {
         this.coilOrSensors = new ArrayList<>();
         this.deviceAddr = deviceAddr;
@@ -125,7 +127,7 @@ class ZigbeeNode {
     }
 
     void persist() {
-        EntityManagerFactory factory = Persistence.createEntityManagerFactory("hello");
+        EntityManagerFactory factory = Persistence.createEntityManagerFactory("thePersistenceUnit");
         EntityManager entityManager = factory.createEntityManager();
         entityManager.getTransaction().begin();
         entityManager.persist(this);

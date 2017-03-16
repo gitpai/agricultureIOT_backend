@@ -36,6 +36,7 @@ class CoilOrSensor {
         sensorTypeMap.put(0x03,"照度");
     }
 
+    public CoilOrSensor(){}
     public CoilOrSensor(ZigbeeNode node, byte[] data) throws IOException {
         this.node = node;
         this.sensorType = data[0];
