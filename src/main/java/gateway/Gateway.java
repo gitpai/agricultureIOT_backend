@@ -126,10 +126,13 @@ class ZigbeeNode {
     }
 
     void persist() {
-        EntityManagerFactory factory = Persistence.createEntityManagerFactory("thePersistenceUnit");
+        EntityManagerFactory factory = Persistence.createEntityManagerFactory("hello");
         EntityManager entityManager = factory.createEntityManager();
         entityManager.getTransaction().begin();
         entityManager.persist(this);
+        this.coilOrSensors.forEach(coilOrSensor -> {
+            entityManager.persist(coilOrSensor);
+        });
         entityManager.getTransaction().commit();
 
     }
@@ -173,7 +176,7 @@ class CoilOrSensor {
         this.value += (short) (data[3]);
     }
     public String toString() {
-        return "type\t:"+sensorTypeMap.get(sensorType) +", dataType:" +Integer.toHexString(this.dataType) +
+        return "type\t:"+Integer.toHexString(sensorType) +", dataType:" +Integer.toHexString(this.dataType) +
                 ", value\t:" + Integer.toHexString(value);
     }
 }
@@ -248,6 +251,9 @@ public class Gateway implements Runnable {
             System.out.println("running");
             this.readNodesDummy();
             this.zigbeeNodes.forEach(zigbeeNode -> {
+                if(devMode) {
+                    zigbeeNode.dumpSensors();
+                }
                 zigbeeNode.persist();
             });
 /*
@@ -293,9 +299,7 @@ public class Gateway implements Runnable {
                 zigbeeNode.coilOrSensors.add(new CoilOrSensor(zigbeeNode, new byte[]{
                         (byte) 0xA1, (byte) 0x81, 0x00, 0x04
                 }));
-                if(devMode) {
-                    System.out.println(zigbeeNode);
-                }
+
 
             }catch (IOException e) {
 
