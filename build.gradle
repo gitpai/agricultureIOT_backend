@@ -28,6 +28,7 @@ dependencies {
     // https://mvnrepository.com/artifact/javax.persistence/persistence-api
     //compile group: 'javax.persistence', name: 'persistence-api', version: '1.0.2'
 
+    compile("org.springframework.boot:spring-boot-starter-data-rest")
     compile("org.springframework.boot:spring-boot-starter-data-jpa")
     compile("com.h2database:h2")
     compile("mysql:mysql-connector-java:5.1.37")
