@@ -15,6 +15,7 @@ import java.util.*;
  * Created by dean on 3/13/17.
  */
 public class Gateway implements Runnable {
+    private static final byte ONLINE_STATUS_COUNT = 64;
     OutputStream out = null;
     DataInputStream in = null;
     public Socket client = null;
@@ -151,7 +152,9 @@ public class Gateway implements Runnable {
 
     private byte[] readOnlineStatus() throws IOException {
         // 0x5555: status register, 0x08:number of sensors
-        byte[] command = ModbusTCPPacket.NewCommandPacket((byte) 0xFF, FunctionCode.ReadOnlineStatus.code, (new byte[]{0x55, 0x55, 0, 8})).toByteArray();
+        byte[] command = ModbusTCPPacket.NewCommandPacket((byte) 0xFF,
+                FunctionCode.ReadOnlineStatus.code,
+                (new byte[]{0x55, 0x55, 0, ONLINE_STATUS_COUNT})).toByteArray();
         out.write(command);
         out.flush();
         ModbusTCPPacket response = ModbusTCPPacket.ReadResponsePacket(in);

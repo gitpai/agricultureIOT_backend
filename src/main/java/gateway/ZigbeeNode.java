@@ -15,6 +15,9 @@ import java.util.List;
 @Entity
 @Table(name = "T_ZIGBEE_NODE")
 class ZigbeeNode {
+    private static final byte SENSORS_PER_NODE = 8;
+    private static final byte REGISTERS_PER_SENSOR = 2;
+    private static final byte BYTES_PER_REGISTER = 2;
     @Column(name = "NODE_ADDR")
     byte deviceAddr;
     @Column(name = "NODE_NAME")
@@ -64,8 +67,9 @@ class ZigbeeNode {
      * 读取某个节点个的所有传感器或线圈值,只读前8个，因为一般节点只有几个传感器
      */
     public void readNodeSensors(OutputStream out, DataInputStream in) throws IOException {
-        byte[] command = ModbusTCPPacket.NewCommandPacket(deviceAddr, FunctionCode.ReadNodeSensors.code,
-                (new byte[]{0x00, 0x00, 0x00, 0x08})).toByteArray();
+        byte[] command = ModbusTCPPacket.NewCommandPacket(deviceAddr,
+                FunctionCode.ReadNodeSensors.code,
+                (new byte[]{0x00, 0x00, 0x00, REGISTERS_PER_SENSOR * SENSORS_PER_NODE })).toByteArray();
         out.write(command);
         out.flush();
         ModbusTCPPacket response = ModbusTCPPacket.ReadResponsePacket(in);
@@ -76,12 +80,15 @@ class ZigbeeNode {
     }
 
     private void parseNodeSensors(ModbusTCPPacket packet) throws IOException {
+        int bytesPerSensor = BYTES_PER_REGISTER*REGISTERS_PER_SENSOR;
         int byteCount = packet.data[0];
-        if (byteCount / 8 != 4) {
+        if (byteCount / SENSORS_PER_NODE !=  bytesPerSensor) {
             throw new IOException("invalid response byte count");
         }
-        for (int i = 0; i < 8; i++) {
-            coilOrSensors.add(new CoilOrSensor(this, Arrays.copyOfRange(packet.data, i * 4 + 1, i * 4 + 5)));
+        for (int i = 0; i < SENSORS_PER_NODE; i++) {
+            int startIndex = i*bytesPerSensor+1;
+            coilOrSensors.add(new CoilOrSensor(this, Arrays.copyOfRange(packet.data, startIndex,
+                    startIndex+ bytesPerSensor)));
         }
     }
 
