@@ -13,25 +13,22 @@ import java.util.List;
  */ // 一个网关可连最多64个Zigbee节点
 // 一个Zigbee节点最多接32个传感器或线圈
 @Entity
-@Table(name="T_ZIGBEE_NODE")
+@Table(name = "T_ZIGBEE_NODE")
 class ZigbeeNode {
+    @Column(name = "NODE_ADDR")
+    byte deviceAddr;
+    @Column(name = "NODE_NAME")
+    String nodeName;
+    @OneToMany(targetEntity = CoilOrSensor.class, mappedBy = "node")
+    List<CoilOrSensor> coilOrSensors;
+    boolean online;
+    boolean valid;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(name="NODE_ADDR")
-    byte deviceAddr;
-
-    @Column(name="NODE_NAME")
-    String nodeName;
-
-    @OneToMany(targetEntity = CoilOrSensor.class, mappedBy="node")
-    List<CoilOrSensor> coilOrSensors;
-
-    boolean online;
-    boolean valid;
-
-    public ZigbeeNode(){}
+    public ZigbeeNode() {
+    }
 
     public ZigbeeNode(byte deviceAddr, String nodeName) {
         this.coilOrSensors = new ArrayList<>();
@@ -43,37 +40,23 @@ class ZigbeeNode {
     public Long getId() {
         return id;
     }
-    public void setId(Long id) {
-        this.id = id;
-    }
-
 
     public byte getDeviceAddr() {
         return deviceAddr;
     }
 
-    public void setDeviceAddr(byte deviceAddr) {
-        this.deviceAddr = deviceAddr;
-    }
     public String getNodeName() {
         return nodeName;
-    }
-
-    public void setNodeName(String nodeName) {
-        this.nodeName = nodeName;
     }
 
     public List<CoilOrSensor> getCoilOrSensors() {
         return coilOrSensors;
     }
 
-    public void setCoilOrSensors(List<CoilOrSensor> coilOrSensors) {
-        this.coilOrSensors = coilOrSensors;
-    }
 
     public void dumpSensors() {
-        for(CoilOrSensor sensor : coilOrSensors) {
-            System.out.println(nodeName+":"+Integer.toHexString(deviceAddr)+"\t"+sensor.toString());
+        for (CoilOrSensor sensor : coilOrSensors) {
+            System.out.println(nodeName + ":" + Integer.toHexString(deviceAddr) + "\t" + sensor.toString());
         }
     }
 
@@ -127,7 +110,7 @@ class ZigbeeNode {
     }
 
     void persist() {
-        EntityManagerFactory factory = Persistence.createEntityManagerFactory("thePersistenceUnit");
+        EntityManagerFactory factory = Persistence.createEntityManagerFactory("hello");
         EntityManager entityManager = factory.createEntityManager();
         entityManager.getTransaction().begin();
         entityManager.persist(this);

@@ -15,18 +15,34 @@ class CoilOrSensor {
     @GeneratedValue
     Long id;
 
-    @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="NODE_ID")
-    ZigbeeNode node;
-
     @Column(name="SENSOR_TYPE")
     byte sensorType;
+
+    public Long getId() {
+        return id;
+    }
+
+    public byte getSensorType() {
+        return sensorType;
+    }
+
+    public byte getDataType() {
+        return dataType;
+    }
+
+    public short getValue() {
+        return value;
+    }
 
     @Column(name="DATA_TYPE")
     byte dataType;
 
     @Column(name="VALUE")
     short value;
+
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="NODE_ID")
+    ZigbeeNode node;
 
     public static Map<Integer,String> sensorTypeMap = new HashMap<Integer,String>();
     static {
