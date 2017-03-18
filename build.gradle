@@ -26,15 +26,20 @@ repositories {
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
     // https://mvnrepository.com/artifact/javax.persistence/persistence-api
-    compile group: 'javax.persistence', name: 'persistence-api', version: '1.0.2'
+    //compile group: 'javax.persistence', name: 'persistence-api', version: '1.0.2'
 
+    compile("org.springframework.boot:spring-boot-starter-data-rest")
     compile("org.springframework.boot:spring-boot-starter-data-jpa")
     compile("com.h2database:h2")
     compile("mysql:mysql-connector-java:5.1.37")
+    // https://mvnrepository.com/artifact/org.springframework.data/spring-data-rest-core
+    compile group: 'org.springframework.data', name: 'spring-data-rest-core', version: '2.6.1.RELEASE'
+
+
 }
 
 // Task "distZip" added by plugin "java-library-distribution":
-distZip.shouldRunAfter(build)
+//distZip.shouldRunAfter(build)
 
 jar {
     // Keep jar clean:

@@ -1,11 +1,11 @@
 package gateway;
 
-//import org.springframework.boot.SpringApplication;
-//import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.io.IOException;
 
-//@SpringBootApplication
+@SpringBootApplication
 public class Application {
 
     public static void main(String[] args) {
@@ -16,6 +16,6 @@ public class Application {
             System.out.println("gateway error:"+e.getMessage());
             e.printStackTrace();
         }
-        //SpringApplication.run(Application.class, args);
+        SpringApplication.run(Application.class, args);
     }
 }
