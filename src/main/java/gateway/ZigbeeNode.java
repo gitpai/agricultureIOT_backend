@@ -158,7 +158,9 @@ class ZigbeeNode {
         entityManager.getTransaction().begin();
         entityManager.persist(this);
         this.coilOrSensors.forEach(coilOrSensor -> {
-            entityManager.persist(coilOrSensor);
+            if(coilOrSensor.getSensorType()!=0) {// this channel report no data
+                entityManager.persist(coilOrSensor);
+            }
         });
         entityManager.getTransaction().commit();
         System.out.println("done");

@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import utils.Utils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -27,19 +28,20 @@ public class Gateway {
     int port;
     int maxNodes;
     int maxChannelsPerNode;
-    public List<ZigbeeNode> zigbeeNodes;
+
+    Map<Byte, String> zigbeeNodeNames;
 
     OutputStream out = null;
     DataInputStream in = null;
     Socket client = null;
 
-    public Gateway(String name, String host, int port, List<ZigbeeNode> zigbeeNodes) throws IOException {
+    public Gateway(String name, String host, int port, Map<Byte,String> zigbeeNodeNames) throws IOException {
         this.name = name;
         this.host = host;
         this.port = port;
         this.maxNodes = MAX_NODES;
         this.maxChannelsPerNode = MAX_CHANNELS_PER_NODE;
-        this.zigbeeNodes = zigbeeNodes;
+        this.zigbeeNodeNames = zigbeeNodeNames;
     }
 
     public Gateway(String name,
@@ -47,13 +49,13 @@ public class Gateway {
                    int port,
                    int maxNodes,
                    int maxChannelsPerNode,
-                   List<ZigbeeNode> zigbeeNodes) throws IOException {
+                   Map<Byte,String> zigbeeNodeNames) throws IOException {
         this.name = name;
         this.host = host;
         this.port = port;
         this.maxChannelsPerNode = maxChannelsPerNode;
         this.maxNodes = maxNodes;
-        this.zigbeeNodes = zigbeeNodes;
+        this.zigbeeNodeNames = zigbeeNodeNames;
     }
 
     /**
@@ -85,22 +87,40 @@ public class Gateway {
     }
 
     public void collectAndPersist(boolean dummy, EntityManager entityManager) throws IOException {
-        byte[] online = readOnlineStatus();
-        for (ZigbeeNode node : this.zigbeeNodes) {
-            ZigbeeNode zigbeeNode = new ZigbeeNode(node.nodeAddr, node.nodeName);
-            zigbeeNode.online = utils.Utils.getBit(online, node.getNodeAddr());
-            if (dummy) {
-                this.readNodeDummy(zigbeeNode);
-            } else {
-                this.readNode(zigbeeNode);
+        byte[] online;
+        if(dummy) {
+            online = new byte[]{0x01,0x00,0x00,0x00,0x00,0x00,0x00,(byte)0x80};
+        }else {
+            online = readOnlineStatus();
+        }
+
+        for(byte i = 0;i< this.maxNodes;i++) {
+            byte deviceAddr = (byte)(i+1);
+            boolean isOnline = Utils.getBit(online,i);
+            if(isOnline) {
+                logger.info(String.format("found zigbee device 0x%02x online, collecting readouts...",deviceAddr));
+                String deviceName = (String)this.zigbeeNodeNames.get(new Byte(deviceAddr));
+                if(deviceName==null) {
+                    deviceName="TBD";
+                }
+                ZigbeeNode zigbeeNode = new ZigbeeNode(deviceAddr, deviceName);
+                zigbeeNode.online = isOnline;
+                if (dummy) {
+                    this.readNodeDummy(zigbeeNode);
+                } else {
+                    this.readNode(zigbeeNode);
+                }
+
+                if (zigbeeNode.valid) {
+                    logger.info(String.format("readout collected, " + zigbeeNode.toString()));
+                    zigbeeNode.persist(entityManager);
+                } else {
+                    logger.error("readout collection failure, " + zigbeeNode.toString());
+                }
             }
 
-            if (zigbeeNode.valid) {
-                zigbeeNode.persist(entityManager);
-            } else {
-                logger.error("zigbee node collection failed, thus not stored to database, info:" + zigbeeNode.toString());
-            }
         }
+
     }
 
 
@@ -178,7 +198,7 @@ public class Gateway {
                 ", port=" + port +
                 ", maxNodes=" + maxNodes +
                 ", maxChannelsPerNode=" + maxChannelsPerNode +
-                ", zigbeeNodes=" + zigbeeNodes +
+                ", zigbeeNodeNames=" + zigbeeNodeNames +
                 '}';
     }
 }

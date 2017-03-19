@@ -11,7 +11,9 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by dean on 3/18/17.
@@ -94,7 +96,7 @@ public class Config {
             }catch (NumberFormatException nfe) {
                 maxChannelsPerNode = Gateway.MAX_CHANNELS_PER_NODE;
             }
-            List<ZigbeeNode> zigbeeNodes = parseZigbeeNodes();
+            Map<Byte,String> zigbeeNodes = parseZigbeeNodes();
             gateway = new Gateway(name,host,port,maxNodes, maxChannelsPerNode,zigbeeNodes);
             logger.debug(gateway.toString());
         } catch (Exception e) {
@@ -106,16 +108,16 @@ public class Config {
     /**
      * parse zigbee nodes
      */
-    private List<ZigbeeNode> parseZigbeeNodes() {
-        List<ZigbeeNode> zigbeeNodes = new ArrayList<>();
+    private Map<Byte,String> parseZigbeeNodes() {
+        Map<Byte,String> zigbeeNodeNames = new HashMap<>();
         NodeList nList = doc.getElementsByTagName("node");
         for (int i = 0; i < nList.getLength(); i++) {
             Node node = nList.item(i);
             String nodeName = node.getAttributes().getNamedItem("nodeName").getNodeValue();
             String nodeAddr = node.getAttributes().getNamedItem("nodeAddr").getNodeValue();
-            zigbeeNodes.add(new ZigbeeNode((byte) Integer.decode(nodeAddr).byteValue(), nodeName));
+            zigbeeNodeNames.put(new Byte((byte)Integer.parseUnsignedInt(nodeAddr)), nodeName);
         }
-        return zigbeeNodes;
+        return zigbeeNodeNames;
     }
 
 

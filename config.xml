@@ -10,7 +10,7 @@
 
         <nodes>
             <node nodeName="zigbeeNode1" nodeAddr="0x40"/>
-            <node nodeName="zigbeeNode2" nodeAddr="0x45"/>
+            <node nodeName="zigbeeNode2" nodeAddr="0x01"/>
         </nodes>
 
     </gateway>
