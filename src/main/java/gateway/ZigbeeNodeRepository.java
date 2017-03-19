@@ -13,7 +13,6 @@ import java.util.List;
 
 @RepositoryRestResource(collectionResourceRel = "nodes", path = "nodes")
 public interface ZigbeeNodeRepository extends PagingAndSortingRepository<ZigbeeNode, Long> {
-
-    List<ZigbeeNode> findByNodeName(@Param("nodeName") String nodeName);
+    List<ZigbeeNode> findTop1ByOrderByIdDesc();
 
 }

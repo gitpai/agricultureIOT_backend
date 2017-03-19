@@ -10,9 +10,9 @@
             <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5InnoDBDialect" />
             <property name="hibernate.hbm2ddl.auto" value="update" />
             <property name="hibernate.connection.driver_class" value="com.mysql.jdbc.Driver" />
-            <property name="hibernate.connection.username" value="root" />
-            <property name="hibernate.connection.password" value="123456" />
-            <property name="hibernate.connection.url" value="jdbc:mysql://localhost/gateway" />
+            <!--<property name="hibernate.connection.username" value="password" />-->
+            <!--<property name="hibernate.connection.password" value="root" />-->
+            <!--<property name="hibernate.connection.url" value="jdbc:mysql://111.111.111.111/gateway" />-->
         </properties>
     </persistence-unit>
     <persistence-unit name="thePersistenceUnit" transaction-type="RESOURCE_LOCAL">

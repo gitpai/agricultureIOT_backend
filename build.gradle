@@ -14,6 +14,7 @@ repositories {
     maven { url "https://repository.jboss.org/nexus/content/repositories/releases" }
 }
 apply plugin: 'java'
+apply plugin: 'idea'
 apply plugin: 'java-library-distribution'
 apply plugin: 'org.springframework.boot'
 
@@ -54,5 +55,15 @@ jar {
 task copyToLib(type: Copy) {
     into "$buildDir/output/lib"
     from configurations.runtime
+}
+
+idea{
+    project {
+        languageLevel = '1.7'
+    }
+    module {
+        downloadJavadoc = true // defaults to false
+        downloadSources = true
+    }
 }
 

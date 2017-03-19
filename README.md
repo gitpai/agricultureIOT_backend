@@ -5,21 +5,24 @@
 
 windows:
 ```bash
-gradlew.bat jar
+gradlew.bat assemble
 ```
 
 linux:
 ```bash
-./gradlew jar
+./gradlew assemble
 ```
 
-output file will be:
-build/libs/gateway-1.0-SNAPSHOT.jar
+输出文件在：
+build/distributions/
+
+下面是两个压缩包，两个是等价的，解压其中一个，直接解压到distributions下面。即右皱
+后选解压到此处。
 
 ## Run
 
 首先修改config.xml，配置网关的ip和端口号，zigbee节点的地址。
 在config.xml所有的同级目录下执行：
 ```bash
-java -jar build/libs/gateway-1.0-SNAPSHOT.jar 
+java -cp build/distributions/gatewayDataParse-1.0-SNAPSHOT/lib/ -jar build/distributions/gatewayDataParse-1.0-SNAPSHOT/gatewayDataParse-1.0-SNAPSHOT.jar 
 ```

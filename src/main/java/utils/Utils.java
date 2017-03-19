@@ -1,5 +1,10 @@
 package utils;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+import java.io.IOException;
 import java.util.Properties;
 
 /**
@@ -11,5 +16,27 @@ public class Utils {
     }
     public static int getInt(Properties prop, String name) {
         return Integer.parseUnsignedInt(prop.getProperty(name));
+    }
+    public static String getOnlyTagAttribute(Document doc, String tagName, String attr) {
+        NodeList tagNodes = doc.getElementsByTagName(tagName);
+        if(tagNodes == null || tagNodes.getLength() ==0) {
+            return null;
+        }
+        Node attrNode = tagNodes.item(0).getAttributes().getNamedItem(attr);
+        if(attrNode == null ) {
+            return null;
+        }
+        return attrNode.getNodeValue();
+    }
+
+    public static boolean getBit(byte[] bytes, int bitNumber) throws IOException {
+        int numberOfBytesRequired = bitNumber/8;
+        if (bitNumber%8!=0){
+            numberOfBytesRequired+=1;
+        }
+        if(bytes.length< numberOfBytesRequired) {
+            throw new IOException("not enough bits");
+        }
+        return (bytes[numberOfBytesRequired-1] & (1<<bitNumber%8)) == 1;
     }
 }
