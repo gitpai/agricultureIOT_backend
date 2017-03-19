@@ -63,10 +63,10 @@ public class Gateway {
      *
      * @return
      */
-    public void init() {
-        //client = new Socket(host, port);
-        //out = new DataOutputStream(client.getOutputStream());
-        //in = new DataInputStream(client.getInputStream());
+    public void init() throws IOException {
+        client = new Socket(host, port);
+        out = new DataOutputStream(client.getOutputStream());
+        in = new DataInputStream(client.getInputStream());
     }
 
     /**
@@ -123,6 +123,41 @@ public class Gateway {
 
     }
 
+    /**
+     * read zigbee node readouts
+     * @param node
+     * @throws IOException
+     */
+    public void readSensorReadouts(ZigbeeNode node) throws IOException {
+        byte[] command = ModbusTCPPacket.NewCommandPacket(
+                node.nodeAddr,
+                FunctionCode.ReadNodeSensors.code,
+                (new byte[]{0x00, 0x00, 0x00, 0x08})
+        ).toByteArray();
+        out.write(command);
+        out.flush();
+        ModbusTCPPacket response = ModbusTCPPacket.ReadResponsePacket(in);
+        if (response.function != FunctionCode.ReadNodeSensors.code) {
+            throw new IOException("Invalid response, function code " + response.function);
+        }
+        parseNodeSensors(response, node);
+    }
+
+    /**
+     * response parser
+     *
+     * @param packet the resonse packet
+     * @throws IOException
+     */
+    private void parseNodeSensors(ModbusTCPPacket packet, ZigbeeNode node) throws IOException {
+        int byteCount = packet.data[0];
+        if (byteCount / this.maxChannelsPerNode != 4) {
+            throw new IOException("invalid response byte count");
+        }
+        for (byte i = 0; i < this.maxChannelsPerNode; i++) {
+            node.coilOrSensors.add(new CoilOrSensor(node, i, Arrays.copyOfRange(packet.data, i * 4 + 1, i * 4 + 5)));
+        }
+    }
 
     /**
      * read zigbee node sensors. if a channel fails,
@@ -132,7 +167,7 @@ public class Gateway {
         zigbeeNode.valid = false;
         try {
             zigbeeNode.coilOrSensors= new ArrayList<>();
-            zigbeeNode.readSensorReadouts(out, in);
+            readSensorReadouts(zigbeeNode);
             zigbeeNode.valid = true;
         } catch (IOException e) {
             zigbeeNode.valid = false;
@@ -144,16 +179,16 @@ public class Gateway {
 
     private byte[] readOnlineStatus() throws IOException {
         // 0x5555: status register, 0x08:number of sensors
-        byte[] command = ModbusTCPPacket.NewCommandPacket((byte) 0xFF, FunctionCode.ReadOnlineStatus.code, (new byte[]{0x55, 0x55, 0, 8})).toByteArray();
+        byte[] command = ModbusTCPPacket.NewCommandPacket((byte) 0xFF, FunctionCode.ReadOnlineStatus.code, (new byte[]{0x55, 0x55, 0, (byte)this.maxNodes})).toByteArray();
         out.write(command);
         out.flush();
         ModbusTCPPacket response = ModbusTCPPacket.ReadResponsePacket(in);
         if (response.function == FunctionCode.ReadOnlineStatus.code) {
-            int count = response.data[0]; // count should be 8
-            if (count != 8) {
+            int count = response.data[0]; // byte count of actual data
+            if (count != this.maxNodes/8) {
                 new IOException("invalid reponse data length");
             }
-            return Arrays.copyOfRange(response.data, 1, 10); // return 8 bytes
+            return Arrays.copyOfRange(response.data, 1, 2+this.maxNodes);
         } else if (response.function == FunctionCode.Error.code) {
             throw new IOException("Read online status error, code " + FunctionCode.Error.code);
         }
