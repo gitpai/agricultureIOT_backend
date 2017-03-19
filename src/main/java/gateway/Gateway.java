@@ -85,8 +85,10 @@ public class Gateway {
     }
 
     public void collectAndPersist(boolean dummy, EntityManager entityManager) throws IOException {
+        byte[] online = readOnlineStatus();
         for (ZigbeeNode node : this.zigbeeNodes) {
             ZigbeeNode zigbeeNode = new ZigbeeNode(node.nodeAddr, node.nodeName);
+            zigbeeNode.online = utils.Utils.getBit(online, node.getNodeAddr());
             if (dummy) {
                 this.readNodeDummy(zigbeeNode);
             } else {
