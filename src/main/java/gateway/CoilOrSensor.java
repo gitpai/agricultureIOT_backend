@@ -46,8 +46,8 @@ class CoilOrSensor {
         this.sensorType = data[0];
         this.dataType = data[1];
         this.value = 0;
-        this.value += (short) ((short) (data[2]) << 8);
-        this.value += (short) (data[3]);
+        this.value += (short) ((short) (data[2] & 0xFF) << 8);
+        this.value += (short) (data[3]&0xFF);
     }
 
     public Long getId() {

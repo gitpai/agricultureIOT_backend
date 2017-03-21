@@ -31,12 +31,26 @@ public class Utils {
 
     public static boolean getBit(byte[] bytes, int bitNumber) throws IOException {
         int numberOfBytesRequired = bitNumber/8;
-        if (bitNumber%8!=0){
-            numberOfBytesRequired+=1;
-        }
         if(bytes.length< numberOfBytesRequired) {
             throw new IOException("not enough bits");
         }
-        return (bytes[numberOfBytesRequired-1] & (1<<bitNumber%8)) == 1;
+        //System.out.printf("%d %d %d\n", bitNumber, bytes.length,numberOfBytesRequired);
+        return (bytes[numberOfBytesRequired] & (1<<bitNumber%8)) != 0;
+    }
+
+    public static String dataToHex(byte[] data){
+        int index = 0;
+        String ret ="data length:" + data.length+"\n";
+        while(data.length - index > 0) {
+            ret+= Integer.toHexString(data[index]);
+            ret += " ";
+            if(index%8==7){
+                ret +="\n";
+            }
+            index++;
+
+        }
+
+        return ret;
     }
 }

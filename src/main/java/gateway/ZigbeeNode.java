@@ -77,27 +77,7 @@ class ZigbeeNode {
         this.coilOrSensors = coilOrSensors;
     }
 
-    /**
-     * Read Sensor readouts
-     *
-     * @param out output stream
-     * @param in  input stream
-     * @throws IOException
-     */
-    public void readSensorReadouts(OutputStream out, DataInputStream in) throws IOException {
-        byte[] command = ModbusTCPPacket.NewCommandPacket(
-                nodeAddr,
-                FunctionCode.ReadNodeSensors.code,
-                (new byte[]{0x00, 0x00, 0x00, 0x08})
-        ).toByteArray();
-        out.write(command);
-        out.flush();
-        ModbusTCPPacket response = ModbusTCPPacket.ReadResponsePacket(in);
-        if (response.function != FunctionCode.ReadNodeSensors.code) {
-            throw new IOException("Invalid response, function code " + response.function);
-        }
-        parseNodeSensors(response);
-    }
+
 
     /**
      * response parser
@@ -105,13 +85,13 @@ class ZigbeeNode {
      * @param packet the resonse packet
      * @throws IOException
      */
-    private void parseNodeSensors(ModbusTCPPacket packet) throws IOException {
-        int byteCount = packet.data[0];
-        if (byteCount / 8 != 4) {
-            throw new IOException("invalid response byte count");
+    public void parseNodeSensors(ModbusTCPPacket packet) throws IOException {
+        int byteCount = packet.data[0] & 0xFF;//make byte unsigned
+        if (byteCount %4 != 0) {
+            throw new IOException(String.format("invalid response byte count %d", byteCount));
         }
-        for (byte i = 0; i < 8; i++) {
-            coilOrSensors.add(new CoilOrSensor(this, i, Arrays.copyOfRange(packet.data, i * 4 + 1, i * 4 + 5)));
+        for (int i = 0; i < byteCount/4; i++) {
+            coilOrSensors.add(new CoilOrSensor(this, (byte)i, Arrays.copyOfRange(packet.data, i * 4 + 1, i * 4 + 5)));
         }
     }
 
@@ -207,4 +187,16 @@ class ZigbeeNode {
         this.created = created;
     }
 
+    @Override
+    public String toString() {
+        return "ZigbeeNode{" +
+                "id=" + id +
+                ", nodeAddr=" + nodeAddr +
+                ", nodeName='" + nodeName + '\'' +
+                ", coilOrSensors=" + coilOrSensors +
+                ", online=" + online +
+                ", valid=" + valid +
+                ", created=" + created +
+                '}';
+    }
 }

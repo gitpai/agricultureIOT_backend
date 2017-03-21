@@ -24,10 +24,16 @@ public class Application {
     public static void main(String[] args) {
         Config config = Config.getInstance();
         Gateway gateway = config.getGateway();
+        try {
+            gateway.init();
+        }catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
-                System.out.println("scheduled " + new Date());
+                System.out.println("scheduled to collect at " + new Date());
                 try {
                     gateway.collectAndPersist(config.isDevMode(), Persistence.getEntityManager());
                 } catch (IOException e) {

@@ -42,10 +42,11 @@ public class ModbusTCPPacket {
         packet.length = in.readShort();
         packet.addr = in.readByte();
         packet.function = in.readByte();
-        packet.data = new byte[100];
-        // function code (which is already read) is counted into data length
-        if(in.read(packet.data,0, packet.length-1) <packet.length-1) {
-            throw new IOException("not enough data.");
+        packet.data = new byte[200];
+        // function code and addr (which is already read) is counted into data length
+        int ret = in.read(packet.data,0, packet.length-2);
+        if( ret <packet.length-2) {
+            throw new IOException(String.format("not enough data, got:%d, expect:%d",ret, packet.length -1 ));
         }
         return packet;
     }
