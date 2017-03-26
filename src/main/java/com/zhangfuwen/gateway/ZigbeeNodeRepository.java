@@ -1,4 +1,4 @@
-package gateway;
+package com.zhangfuwen.gateway;
 
 /**
  * Created by dean on 2017/3/17.

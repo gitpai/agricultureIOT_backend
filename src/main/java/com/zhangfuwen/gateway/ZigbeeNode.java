@@ -1,4 +1,4 @@
-package gateway;
+package com.zhangfuwen.gateway;
 
 import javax.persistence.*;
 import java.io.DataInputStream;

@@ -1,4 +1,4 @@
-package gateway;
+package com.zhangfuwen.gateway;
 
 import java.io.DataInputStream;
 import java.io.IOException;

@@ -1,4 +1,4 @@
-package gateway;
+package com.zhangfuwen.gateway;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,9 +10,7 @@ import utils.Utils;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -68,19 +66,19 @@ public class Config {
     }
 
     void parseAppConfig() {
-        devMode = Utils.getOnlyTagAttribute(doc,"app","devMode").equals("true");
-        String intervalString = Utils.getOnlyTagAttribute(doc,"app","interval");
+        devMode = Utils.getOnlyTagAttribute(doc, "com/zhangfuwen/app","devMode").equals("true");
+        String intervalString = Utils.getOnlyTagAttribute(doc, "com/zhangfuwen/app","interval");
         interval = Integer.parseInt(intervalString);
     }
 
     /**
-     * parse gateway and zigbee devices related configuration options
+     * parse com.zhangfuwen.gateway and zigbee devices related configuration options
      */
     void parseGatewayConfig() {
         try {
-            String name = Utils.getOnlyTagAttribute(doc,"gateway","name");
-            String host = Utils.getOnlyTagAttribute(doc,"gateway","host");
-            String portString = Utils.getOnlyTagAttribute(doc,"gateway","port");
+            String name = Utils.getOnlyTagAttribute(doc, "com/zhangfuwen/gateway","name");
+            String host = Utils.getOnlyTagAttribute(doc, "com/zhangfuwen/gateway","host");
+            String portString = Utils.getOnlyTagAttribute(doc, "com/zhangfuwen/gateway","port");
             String maxNodesString = Utils.getOnlyTagAttribute(doc,"spec","max_nodes");
             String maxChannelsPerNodeString = Utils.getOnlyTagAttribute(doc,"spec","max_channels_per_node");
             int port = Integer.parseInt(portString);

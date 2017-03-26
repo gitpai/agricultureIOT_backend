@@ -1,8 +1,7 @@
-package gateway;
+package com.zhangfuwen.gateway;
 
 import javax.persistence.*;
 import java.io.IOException;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 

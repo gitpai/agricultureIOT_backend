@@ -1,17 +1,10 @@
-package gateway;
+package com.zhangfuwen.gateway;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 import utils.Utils;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.*;
 import java.net.Socket;
 import java.util.*;
@@ -59,7 +52,7 @@ public class Gateway {
     }
 
     /**
-     * init database and gateway connections
+     * init database and com.zhangfuwen.gateway connections
      *
      * @return
      */

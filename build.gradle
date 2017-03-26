@@ -35,6 +35,8 @@ dependencies {
     compile("mysql:mysql-connector-java:5.1.37")
     // https://mvnrepository.com/artifact/org.springframework.data/spring-data-rest-core
     compile group: 'org.springframework.data', name: 'spring-data-rest-core', version: '2.6.1.RELEASE'
+    compile group: 'javax.servlet', name:'jstl'
+    compile group: 'org.apache.tomcat.embed', name:'tomcat-embed-jasper'
 
 
 }

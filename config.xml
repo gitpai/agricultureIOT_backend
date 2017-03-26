@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<app devMode="false"
+<com.zhangfuwen.app devMode="false"
         interval="10">
-    <gateway name="myIOTGateway"
+    <com.zhangfuwen.gateway name="myIOTGateway"
             host="192.168.0.222"
             port="502">
 
@@ -13,5 +13,5 @@
             <node nodeName="zigbeeNode2" nodeAddr="1"/>
         </nodes>
 
-    </gateway>
-</app>
+    </com.zhangfuwen.gateway>
+</com.zhangfuwen.app>
