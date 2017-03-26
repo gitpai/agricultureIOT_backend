@@ -11,8 +11,13 @@ import org.springframework.web.bind.annotation.RestController;
 @Controller
 public class HomeController {
     @RequestMapping("/home")
-    public String index(Model model) {
-        model.addAttribute("msg", "hello");
+    public String index() {
+        //model.addAttribute("msg", "hello");
         return "index";
     }
+    @RequestMapping("/login")
+    public String login() {
+        return "login";
+    }
+
 }
