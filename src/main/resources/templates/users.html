@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Users</title>
+</head>
+<body>
+<table border="1">
+    <tr>
+        <th>用户名</th>
+        <th>id</th>
+        <th>角色</th>
+    </tr>
+    <tr  th:each="user : ${users}">
+        <td th:text="${user.username}">Onions</td>
+        <td th:text="${user.id}">test@test.com.cn</td>
+        <td>
+            <!--//<select th:field="*{user.role.name}" th:remove="all-but-first">-->
+                <!--<option th:each="role : ${user.roles}"-->
+                        <!--th:value="${role.name}" th:text="${role.name}">Credit card</option>-->
+                <!--<option>Another payment method</option>-->
+                <!--<option>Another payment method</option>-->
+            <!--</select>-->
+            <div th:each="role : ${user.roles}" >
+                <span th:text="${role.name}">管理员</span>
+            </div>
+        </td>
+        <td>
+            <a th:href="@{/user/edit(username=${user.username})}">编辑</a>
+        </td>
+
+    </tr>
+</table>
+</body>
+</html>

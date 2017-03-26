@@ -15,10 +15,12 @@ import java.util.List;
 @Entity
 public class SysUser implements UserDetails {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String username;
     private String password;
+    @Transient
+    private String passwordConfirm;
 
     @ManyToMany(cascade = {CascadeType.REFRESH},fetch = FetchType.EAGER)
     private List<SysRole> roles;
@@ -55,6 +57,14 @@ public class SysUser implements UserDetails {
             auths.add(new SimpleGrantedAuthority(role.getName()));
         }
         return auths;
+    }
+
+    public String getPasswordConfirm() {
+        return passwordConfirm;
+    }
+
+    public void setPasswordConfirm(String passwordConfirm) {
+        this.passwordConfirm = passwordConfirm;
     }
 
     @Override
