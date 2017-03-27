@@ -13,4 +13,6 @@ public interface UserService {
 
     SysUser findByUsername(String username);
     List<SysUser> listUsers();
+    boolean resetPassword(String username, String password);
+    boolean varifyPassword(String old, String newPassword);
 }

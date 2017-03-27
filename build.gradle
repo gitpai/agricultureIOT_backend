@@ -31,6 +31,7 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-security")
     compile("org.springframework.boot:spring-boot-starter-thymeleaf")
     compile("net.sourceforge.nekohtml:nekohtml:1.9.21")
+    compile("org.thymeleaf.extras:thymeleaf-extras-springsecurity4")
     compile("com.h2database:h2")
     compile("mysql:mysql-connector-java:5.1.37")
     compile group: 'org.springframework.data', name: 'spring-data-rest-core', version: '2.6.1.RELEASE'
