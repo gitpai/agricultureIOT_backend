@@ -50,7 +50,7 @@
                     <ul>
                         <!-- 欢迎语 -->
                         <li class="am-text-sm tpl-header-navbar-welcome">
-                            <a href="javascript:;">欢迎你, <span>Amaze UI</span> </a>
+                            <a href="javascript:;">欢迎你, <span th:text="${username}">Dean</span> </a>
                         </li>
 
                         <!-- 新邮件 -->
@@ -251,19 +251,19 @@
                     </ul>
                 </li>
                 <li class="sidebar-nav-link">
-                    <a href="sign-up.html">
-                        <i class="am-icon-clone sidebar-nav-link-logo"></i> 注册
+                    <a href="/login">
+                        <i class="am-icon-clone sidebar-nav-link-logo"></i> 登入
                         <span class="am-badge am-badge-secondary sidebar-nav-link-logo-ico am-round am-fr am-margin-right-sm">6</span>
                     </a>
                 </li>
                 <li class="sidebar-nav-link">
-                    <a href="login.html">
-                        <i class="am-icon-key sidebar-nav-link-logo"></i> 登录
+                    <a href="/logout">
+                        <i class="am-icon-key sidebar-nav-link-logo"></i> 退出
                     </a>
                 </li>
                 <li class="sidebar-nav-link">
-                    <a href="404.html">
-                        <i class="am-icon-tv sidebar-nav-link-logo"></i> 404错误
+                    <a href="/users">
+                        <i class="am-icon-tv sidebar-nav-link-logo"></i> 用户管理
                     </a>
                 </li>
 

@@ -9,16 +9,16 @@
 <div th:each="role : ${user.roles}" >
     <span th:text="${role.name}">管理员</span>
 </div>
-<form th:action="@{/user/delete(username=${user.username})}" method="post">
+<form th:action="@{/users/delete(username=${user.username})}" method="post">
     <button id="submit" type="submit">删除</button>
 </form>
-<form th:action="@{/user/promote(username=${user.username},role=admin)}" method="post">
+<form th:action="@{/users/promote(username=${user.username},role=admin)}" method="post">
     <button id="submit1" type="submit">提升为管理员</button>
 </form>
-<form th:action="@{/user/promote(username=${user.username},role=expert)}" method="post">
+<form th:action="@{/users/promote(username=${user.username},role=expert)}" method="post">
     <button id="submit1" type="submit">提升为专家</button>
 </form>
-<form th:action="@{/user/demote(username=${user.username})}" method="post">
+<form th:action="@{/users/demote(username=${user.username})}" method="post">
     <button id="submit2" type="submit">降级为普通用户</button>
 </form>
 <script>

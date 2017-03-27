@@ -30,6 +30,15 @@ class UserServiceImpl implements UserService {
     }
 
     @Override
+    public boolean resetPassword(String username, String password)
+    {
+        SysUser user = userRepository.findByUsername(username);
+        user.setPassword(password);
+        userRepository.save(user);
+        return true;
+    }
+
+    @Override
     public List<SysUser> listUsers(){
         return userRepository.findAll();
     }

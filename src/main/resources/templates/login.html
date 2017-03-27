@@ -43,7 +43,9 @@
 
             </div>
 
-
+            <div th:if="${param.error}" class="alert alert-error">
+                Invalid username and password.
+            </div>
 
             <form class="am-form tpl-form-line-form" th:action="@{/login}" action="/login" method="post">
                 <div class="am-form-group">
