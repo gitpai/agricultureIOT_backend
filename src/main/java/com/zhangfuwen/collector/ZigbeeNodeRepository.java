@@ -15,4 +15,5 @@ import java.util.List;
 public interface ZigbeeNodeRepository extends PagingAndSortingRepository<ZigbeeNode, Long> {
     List<ZigbeeNode> findTop1ByOrderByIdDesc();
     List<ZigbeeNode> findByNodeAddr(@Param("addr") Byte nodeAddr);
+    List<ZigbeeNode> findTop1ByNodeAddrOrderByIdDesc(@Param("addr") Byte nodeAddr);
 }

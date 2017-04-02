@@ -13,7 +13,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "t_zigbee_node")
-class ZigbeeNode {
+public class ZigbeeNode {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

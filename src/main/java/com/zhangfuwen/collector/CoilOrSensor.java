@@ -10,7 +10,7 @@ import java.util.Map;
  */ //开关量或传感器
 @Entity
 @Table(name="t_sensor")
-class CoilOrSensor {
+public class CoilOrSensor {
     public static Map<Integer,String> sensorTypeMap = new HashMap<Integer,String>();
 
     static {
