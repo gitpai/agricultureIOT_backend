@@ -59,11 +59,11 @@
                             <div class="am-u-sm-12 am-u-md-6 am-u-lg-6">
                                 <div class="am-form-group">
                                     <div class="am-btn-toolbar">
-                                        <div class="am-btn-group am-btn-group-xs">
-                                            <a  th:href="/users/add" type="button" class="am-btn am-btn-default am-btn-success"><span
+                                        <div th:remove="all-but-first" class="am-btn-group am-btn-group-xs">
+                                            <a  href="/users/add" type="button" class="am-btn am-btn-default am-btn-success"><span
                                                     class="am-icon-plus"></span> 新增
                                             </a>
-                                            <a th:remove="all" type="button" class="am-btn am-btn-default am-btn-secondary"><span
+                                            <a  type="button" class="am-btn am-btn-default am-btn-secondary"><span
                                                     class="am-icon-save"></span> 保存
                                             </a>
                                             <a type="button" class="am-btn am-btn-default am-btn-warning"><span
