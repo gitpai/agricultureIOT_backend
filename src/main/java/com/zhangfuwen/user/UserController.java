@@ -126,14 +126,11 @@ public class UserController {
     /* 以下为用户客理 */
     @RequestMapping(value = {"/users"}, method = RequestMethod.GET)
     public String users(Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName();
+        model.addAttribute("username", username);
         model.addAttribute("users", userService.listUsers());
         return "user-management";
-    }
-
-    @RequestMapping(value = {"/users/manage"}, method = RequestMethod.GET)
-    public String edit_user(@RequestParam String username, Model model) {
-        model.addAttribute("user", userService.findByUsername(username));
-        return "user-edit";
     }
 
     @RequestMapping(value = {"/users/delete"}, method = RequestMethod.POST)
