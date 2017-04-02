@@ -4,6 +4,7 @@ import javax.persistence.*;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import com.zhangfuwen.utils.Utils;
 
 /**
  * Created by dean on 2017/3/17.
@@ -11,13 +12,11 @@ import java.util.Map;
 @Entity
 @Table(name="t_sensor")
 public class CoilOrSensor {
-    public static Map<Integer,String> sensorTypeMap = new HashMap<Integer,String>();
+    public static Map<Byte,String> sensorTypeMap = new HashMap<Byte,String>();
 
     static {
         //TODO: table not complete
-        sensorTypeMap.put(0x01,"温度");
-        sensorTypeMap.put(0x02,"湿度");
-        sensorTypeMap.put(0x03,"照度");
+        sensorTypeMap = Utils.getSensorTypeMap();
     }
 
     @Id
@@ -87,6 +86,15 @@ public class CoilOrSensor {
 
     public void setValue(short value) {
         this.value = value;
+    }
+
+    public String getSensorTypeString(){
+        return sensorTypeMap.get(this.getSensorType());
+    }
+
+    public String getRealValue() {
+        return Utils.toRealValue(this.dataType, this.value);
+
     }
 
 

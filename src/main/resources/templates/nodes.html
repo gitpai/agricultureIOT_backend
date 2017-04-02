@@ -50,7 +50,7 @@
                 <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
                     <div class="widget am-cf">
                         <div class="widget-head am-cf">
-                            <div class="widget-title  am-cf">用户列表</div>
+                            <div class="widget-title  am-cf">节点列表</div>
 
 
                         </div>
@@ -76,14 +76,12 @@
                                         <td>
                                             <table>
                                                 <tr>
-                                                    <td th:each="chan : ${node.coilOrSensors}">
-                                                        <div>
-                                                            通道:<span th:text="${chan.channel}"></span><br/>
-                                                            传感器类型:<span th:text="${chan.sensorType}"></span><br/>
-                                                            <!--<span th:text="${chan.dataType}"></span><br/>-->
-                                                            数值:<span th:text="${chan.value}"></span>
+                                                    <td class="sensor" th:each="chan : ${node.coilOrSensors}">
+                                                            通道:<span class="channel" th:text="${chan.channel}"></span><br/>
+                                                            传感器类型:<span class="sensorType" th:text="${chan.getSensorTypeString()}"></span><br/>
+                                                            数据类型:<span class="dataType" th:text="${chan.dataType}"></span><br/>
+                                                            数值:<span class="rawvalue" th:text="${chan.getRealValue()}"></span>
 
-                                                        </div>
                                                     </td>
                                                 </tr>
                                             </table>
