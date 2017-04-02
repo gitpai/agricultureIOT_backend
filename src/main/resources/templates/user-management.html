@@ -50,7 +50,7 @@
                 <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
                     <div class="widget am-cf">
                         <div class="widget-head am-cf">
-                            <div class="widget-title  am-cf">文章列表</div>
+                            <div class="widget-title  am-cf">用户列表</div>
 
 
                         </div>
@@ -60,10 +60,11 @@
                                 <div class="am-form-group">
                                     <div class="am-btn-toolbar">
                                         <div th:remove="all-but-first" class="am-btn-group am-btn-group-xs">
-                                            <a  href="/users/add" type="button" class="am-btn am-btn-default am-btn-success"><span
+                                            <a href="/users/add" type="button"
+                                               class="am-btn am-btn-default am-btn-success"><span
                                                     class="am-icon-plus"></span> 新增
                                             </a>
-                                            <a  type="button" class="am-btn am-btn-default am-btn-secondary"><span
+                                            <a type="button" class="am-btn am-btn-default am-btn-secondary"><span
                                                     class="am-icon-save"></span> 保存
                                             </a>
                                             <a type="button" class="am-btn am-btn-default am-btn-warning"><span
@@ -76,29 +77,8 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="am-u-sm-12 am-u-md-6 am-u-lg-3">
-                                <div class="am-form-group tpl-table-list-select">
-                                    <select data-am-selected="{btnSize: 'sm'}">
-                                        <option value="option1">所有类别</option>
-                                        <option value="option2">IT业界</option>
-                                        <option value="option3">数码产品</option>
-                                        <option value="option3">笔记本电脑</option>
-                                        <option value="option3">平板电脑</option>
-                                        <option value="option3">只能手机</option>
-                                        <option value="option3">超极本</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="am-u-sm-12 am-u-md-12 am-u-lg-3">
-                                <div class="am-input-group am-input-group-sm tpl-form-border-form cl-p">
-                                    <input type="text" class="am-form-field ">
-                                    <span class="am-input-group-btn">
-            <button class="am-btn  am-btn-default am-btn-success tpl-table-list-field am-icon-search"
-                    type="button"></button>
-          </span>
-                                </div>
-                            </div>
 
+                            <!--用户列表-->
                             <div class="am-u-sm-12">
                                 <table width="100%" class="am-table am-table-compact am-table-striped tpl-table-black "
                                        id="example-r">
@@ -127,7 +107,7 @@
                                         <td>
                                             <form th:action="@{/users/delete(username=${user.username})}" method="post">
                                                 <button class="tpl-table-black-operation-del" id="submit" type="submit">
-                                                    <i class="am-icon-trash"></i> 删除删除
+                                                    <i class="am-icon-trash"></i> 删除用户
                                                 </button>
                                             </form>
                                             <form th:action="@{/users/promote(username=${user.username},role=admin)}"
@@ -138,10 +118,10 @@
                                             </form>
                                             <form th:action="@{/users/promote(username=${user.username},role=expert)}"
                                                   method="post">
-                                                <button id="submit1" type="submit">提升为专家</button>
+                                                <button id="submit2" type="submit">提升为专家</button>
                                             </form>
                                             <form th:action="@{/users/demote(username=${user.username})}" method="post">
-                                                <button id="submit2" type="submit">降级为普通用户</button>
+                                                <button id="submit3" type="submit">降级为普通用户</button>
                                             </form>
                                         </td>
                                     </tr>
@@ -149,20 +129,6 @@
                                     <!-- more data -->
                                     </tbody>
                                 </table>
-                            </div>
-                            <div class="am-u-lg-12 am-cf">
-
-                                <div class="am-fr">
-                                    <ul class="am-pagination tpl-pagination">
-                                        <li class="am-disabled"><a href="#">«</a></li>
-                                        <li class="am-active"><a href="#">1</a></li>
-                                        <li><a href="#">2</a></li>
-                                        <li><a href="#">3</a></li>
-                                        <li><a href="#">4</a></li>
-                                        <li><a href="#">5</a></li>
-                                        <li><a href="#">»</a></li>
-                                    </ul>
-                                </div>
                             </div>
                         </div>
                     </div>

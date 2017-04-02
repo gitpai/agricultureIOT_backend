@@ -84,10 +84,15 @@ public class UserController {
         SysUser user = (SysUser) auth.getPrincipal();
 
         logger.info(""+user.getUsername() +"  " + userForm.getUsername());
+        logger.info(user.toString());
 
-        if ((!(user.getUsername().equals(userForm.getUsername())) ||
+        if (!((user.getUsername().equals(userForm.getUsername())) ||
                 request.isUserInRole("ROLE_CREATOR") ||
                 request.isUserInRole("ROLE_ADMIN"))) {
+            logger.error("你无权修改该用户密码");
+            if(!user.getUsername().equals(userForm.getUsername())) {
+                logger.error("非本人操作");
+            }
             String referer = request.getHeader("Referer");
             redirectAttributes.addFlashAttribute("message", "你无权修改该用户密码");
             redirectAttributes.addFlashAttribute("hasErrors", true);
@@ -95,19 +100,21 @@ public class UserController {
         }
         SysUser targetedUser = userService.findByUsername(userForm.getUsername());
         if(targetedUser==null){
+            logger.error("用户名不存在");
             model.addAttribute("hasErrors", true);
             model.addAttribute("message", "用户不存在");
             return "reset-password";
         }
-        if((!userService.varifyPassword(oldPassword, targetedUser.getPassword())) &&
-                request.isUserInRole("ROLE_CREATOR") &&
+        if(!(userService.varifyPassword(oldPassword, targetedUser.getPassword())) ||
+                request.isUserInRole("ROLE_CREATOR") ||
                 request.isUserInRole("ROLE_ADMIN")){
-            logger.info("oldPassword:"+oldPassword);
+            logger.error("oldPassword:"+oldPassword);
             model.addAttribute("hasErrors", true);
             model.addAttribute("message", "旧密码不正确且你无管理员权限");
             return "reset-password";
         }
         if(!userForm.getPassword().equals(userForm.getPasswordConfirm())){
+            logger.error("新密码前后两次输入不一致");
             model.addAttribute("hasErrors", true);
             model.addAttribute("message", "新密码前后两次输入不一致");
             return "reset-password";

@@ -31,4 +31,12 @@ public class SysRole {
     public void setName(String name) {
         this.name = name;
     }
+
+    @Override
+    public String toString() {
+        return "SysRole{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }

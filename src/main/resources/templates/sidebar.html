@@ -1,20 +1,7 @@
 <div class="left-sidebar">
-    <!-- 用户信息 -->
-    <div class="tpl-sidebar-user-panel">
-        <div class="tpl-user-panel-slide-toggleable">
-            <div class="tpl-user-panel-profile-picture">
-                <img src="/assets/img/user04.png" alt="">
-            </div>
-            <span class="user-panel-logged-in-text">
-              <i class="am-icon-circle-o am-text-success tpl-user-panel-status-icon"></i>
-              禁言小张
-          </span>
-            <a href="javascript:;" class="tpl-user-panel-action-link"> <span class="am-icon-pencil"></span> 账号设置</a>
-        </div>
-    </div>
-
     <!-- 菜单 -->
     <ul class="sidebar-nav">
+
         <li class="sidebar-nav-heading">Components <span class="sidebar-nav-heading-info"> 附加组件</span></li>
         <li class="sidebar-nav-link">
             <a href="index.html" class="active">
@@ -64,23 +51,7 @@
                 </li>
             </ul>
         </li>
-        <li class="sidebar-nav-link">
-            <a href="/login">
-                <i class="am-icon-clone sidebar-nav-link-logo"></i> 登入
-                <span class="am-badge am-badge-secondary sidebar-nav-link-logo-ico am-round am-fr am-margin-right-sm">6</span>
-            </a>
-        </li>
-        <li class="sidebar-nav-link">
-            <a href="/logout">
-                <i class="am-icon-key sidebar-nav-link-logo"></i> 退出
-            </a>
-        </li>
-        <li sec:authorize="hasRole('ROLE_ADMIN')" class="sidebar-nav-link">
-            <a href="/users">
-                <i class="am-icon-tv sidebar-nav-link-logo"></i> 用户管理
-            </a>
-            This content is only shown to administrators.
-        </li>
+
 
     </ul>
 </div>
