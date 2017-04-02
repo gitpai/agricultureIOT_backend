@@ -1,4 +1,4 @@
-package com.zhangfuwen.gateway;
+package com.zhangfuwen.collector;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,7 +52,7 @@ public class Gateway {
     }
 
     /**
-     * init database and com.zhangfuwen.gateway connections
+     * init database and com.zhangfuwen.collector connections
      *
      * @return
      */

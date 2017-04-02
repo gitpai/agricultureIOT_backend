@@ -25,10 +25,10 @@ public class Application extends SpringBootServletInitializer {
 
     public static void main(String[] args) {
 //        Config config = Config.getInstance();
-//        Gateway com.zhangfuwen.gateway = config.getGateway();
+//        Gateway com.zhangfuwen.collector = config.getGateway();
 //        if(!config.isDevMode()) {
 //            try {
-//                com.zhangfuwen.gateway.init();
+//                com.zhangfuwen.collector.init();
 //            } catch (IOException e) {
 //                e.printStackTrace();
 //                return;
@@ -39,7 +39,7 @@ public class Application extends SpringBootServletInitializer {
 //            public void run() {
 //                System.out.println("scheduled to collect at " + new Date());
 //                try {
-//                    com.zhangfuwen.gateway.collectAndPersist(config.isDevMode(), Persistence.getEntityManager());
+//                    com.zhangfuwen.collector.collectAndPersist(config.isDevMode(), Persistence.getEntityManager());
 //                } catch (IOException e) {
 //                    e.printStackTrace();
 //                }

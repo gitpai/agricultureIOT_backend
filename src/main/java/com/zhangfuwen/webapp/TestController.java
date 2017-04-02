@@ -1,4 +1,4 @@
-package com.zhangfuwen.app;
+package com.zhangfuwen.webapp;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;

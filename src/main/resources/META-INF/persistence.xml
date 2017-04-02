@@ -12,7 +12,7 @@
             <property name="hibernate.connection.driver_class" value="com.mysql.jdbc.Driver" />
             <!--<property name="hibernate.connection.username" value="password" />-->
             <!--<property name="hibernate.connection.password" value="root" />-->
-            <!--<property name="hibernate.connection.url" value="jdbc:mysql://111.111.111.111/com.zhangfuwen.gateway" />-->
+            <!--<property name="hibernate.connection.url" value="jdbc:mysql://111.111.111.111/com.zhangfuwen.collectoror" />-->
         </properties>
     </persistence-unit>
     <persistence-unit name="thePersistenceUnit" transaction-type="RESOURCE_LOCAL">

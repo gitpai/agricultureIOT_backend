@@ -1,4 +1,4 @@
-package com.zhangfuwen.gateway;
+package com.zhangfuwen.collector;
 
 /**
  * Created by dean on 2017/3/17.

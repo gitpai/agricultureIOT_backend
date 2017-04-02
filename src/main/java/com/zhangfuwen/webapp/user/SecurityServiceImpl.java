@@ -1,4 +1,4 @@
-package com.zhangfuwen.user;
+package com.zhangfuwen.webapp.user;
 
 /**
  * Created by dean on 3/26/17.

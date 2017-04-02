@@ -1,4 +1,4 @@
-package com.zhangfuwen.gateway;
+package com.zhangfuwen.collector;
 
 import javax.persistence.*;
 import java.io.IOException;

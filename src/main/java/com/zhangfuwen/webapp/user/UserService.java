@@ -1,6 +1,4 @@
-package com.zhangfuwen.user;
-
-import org.springframework.stereotype.Service;
+package com.zhangfuwen.webapp.user;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.zhangfuwen.user;
+package com.zhangfuwen.webapp.user;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

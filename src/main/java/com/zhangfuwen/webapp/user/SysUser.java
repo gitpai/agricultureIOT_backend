@@ -1,4 +1,4 @@
-package com.zhangfuwen.user;
+package com.zhangfuwen.webapp.user;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

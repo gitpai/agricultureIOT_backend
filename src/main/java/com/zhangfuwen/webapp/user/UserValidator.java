@@ -1,4 +1,4 @@
-package com.zhangfuwen.user;
+package com.zhangfuwen.webapp.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
