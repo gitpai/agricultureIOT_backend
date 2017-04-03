@@ -44,6 +44,10 @@ public class ZigbeeNode {
     @Column(name = "created")
     private Date created;
 
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="gateway_id")
+    Gateway gateway;
+
     /**
      * constructor for Spring JPA
      */

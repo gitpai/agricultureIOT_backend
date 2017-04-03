@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.zhangfuwen.utils.Utils;
 
-import javax.persistence.EntityManager;
+import javax.persistence.*;
 import java.io.*;
 import java.net.Socket;
 import java.util.*;
@@ -12,23 +12,42 @@ import java.util.*;
 /**
  * Created by dean on 3/13/17.
  */
+@Entity
+@Table(name = "t_gateway")
 public class Gateway {
     public static final int MAX_NODES = 64;
     public static final int MAX_CHANNELS_PER_NODE = 32;
     private static final Logger logger = LoggerFactory.getLogger(Gateway.class);
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    Long id;
+    @Column(name = "name")
     String name;
+    @Column(name = "ip")
     String host;
+    @Column(name = "port")
     int port;
+    @Column(name = "max_nodes")
     int maxNodes;
+    @Column(name = "max_channels")
     int maxChannelsPerNode;
 
-    Map<Byte, String> zigbeeNodeNames;
+    @OneToMany(targetEntity = ZigbeeNode.class,mappedBy = "gateway")
+    List<ZigbeeNode> nodes;
 
+    @Transient
+    Map<Byte, String> zigbeeNodeNames;
+    @Transient
     OutputStream out = null;
+    @Transient
     DataInputStream in = null;
+    @Transient
     Socket client = null;
 
-    public Gateway(String name, String host, int port, Map<Byte,String> zigbeeNodeNames) throws IOException {
+    public Gateway() {
+    }
+
+    public Gateway(String name, String host, int port, Map<Byte, String> zigbeeNodeNames) throws IOException {
         this.name = name;
         this.host = host;
         this.port = port;
@@ -42,7 +61,7 @@ public class Gateway {
                    int port,
                    int maxNodes,
                    int maxChannelsPerNode,
-                   Map<Byte,String> zigbeeNodeNames) throws IOException {
+                   Map<Byte, String> zigbeeNodeNames) {
         this.name = name;
         this.host = host;
         this.port = port;
@@ -56,7 +75,7 @@ public class Gateway {
      *
      * @return
      */
-    public void init() throws IOException{
+    public void init() throws IOException {
         client = new Socket(host, port);
         out = new DataOutputStream(client.getOutputStream());
         in = new DataInputStream(client.getInputStream());
@@ -81,21 +100,21 @@ public class Gateway {
 
     public void collectAndPersist(boolean dummy, EntityManager entityManager) throws IOException {
         byte[] online;
-        if(dummy) {
-            online = new byte[]{0x01,0x00,0x00,0x00,0x00,0x00,0x00,(byte)0x80};
-        }else {
+        if (dummy) {
+            online = new byte[]{0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, (byte) 0x80};
+        } else {
             online = readOnlineStatus();
         }
         //System.out.print(Utils.dataToHex(online));
-        for(byte i = 0;i< this.maxNodes;i++) {
-            byte deviceAddr = (byte)(i+1);
-            boolean isOnline = Utils.getBit(online,i);
+        for (byte i = 0; i < this.maxNodes; i++) {
+            byte deviceAddr = (byte) (i + 1);
+            boolean isOnline = Utils.getBit(online, i);
 
-            if(isOnline) {
-                logger.info(String.format("found zigbee device 0x%02x online, collecting readouts...",deviceAddr));
-                String deviceName = (String)this.zigbeeNodeNames.get(new Byte(deviceAddr));
-                if(deviceName==null) {
-                    deviceName="TBD";
+            if (isOnline) {
+                logger.info(String.format("found zigbee device 0x%02x online, collecting readouts...", deviceAddr));
+                String deviceName = (String) this.zigbeeNodeNames.get(new Byte(deviceAddr));
+                if (deviceName == null) {
+                    deviceName = "TBD";
                 }
                 ZigbeeNode zigbeeNode = new ZigbeeNode(deviceAddr, deviceName);
                 zigbeeNode.online = isOnline;
@@ -125,7 +144,7 @@ public class Gateway {
     public void readNode(ZigbeeNode zigbeeNode) {
         zigbeeNode.valid = false;
         try {
-            zigbeeNode.coilOrSensors= new ArrayList<>();
+            zigbeeNode.coilOrSensors = new ArrayList<>();
             readSensorReadouts(zigbeeNode);
             zigbeeNode.valid = true;
         } catch (IOException e) {
@@ -144,7 +163,7 @@ public class Gateway {
         byte[] command = ModbusTCPPacket.NewCommandPacket(
                 node.nodeAddr,
                 FunctionCode.ReadNodeSensors.code,
-                (new byte[]{0x00, 0x00, 0x00, (byte)(this.maxChannelsPerNode*2)})
+                (new byte[]{0x00, 0x00, 0x00, (byte) (this.maxChannelsPerNode * 2)})
         ).toByteArray();
         out.write(command);
         out.flush();
@@ -164,10 +183,10 @@ public class Gateway {
         ModbusTCPPacket response = ModbusTCPPacket.ReadResponsePacket(in);
         if (response.function == FunctionCode.ReadOnlineStatus.code) {
             int count = response.data[0]; // count should be 8
-            if (count != this.maxNodes/8) {
+            if (count != this.maxNodes / 8) {
                 new IOException("invalid reponse data length");
             }
-            return Arrays.copyOfRange(response.data, 1, 1+this.maxNodes/8); // return 8 bytes
+            return Arrays.copyOfRange(response.data, 1, 1 + this.maxNodes / 8); // return 8 bytes
         } else if (response.function == FunctionCode.Error.code) {
             throw new IOException("Read online status error, code " + FunctionCode.Error.code);
         }
@@ -181,7 +200,7 @@ public class Gateway {
      */
     public void readNodeDummy(ZigbeeNode zigbeeNode) {
         try {
-            zigbeeNode.coilOrSensors= new ArrayList<>();
+            zigbeeNode.coilOrSensors = new ArrayList<>();
             zigbeeNode.coilOrSensors.add(new CoilOrSensor(zigbeeNode, (byte) 0, new byte[]{
                     (byte) 0xA1, (byte) 0x81, 0x00, 0x44
             }));
@@ -202,6 +221,54 @@ public class Gateway {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getHost() {
+        return host;
+    }
+
+    public void setHost(String host) {
+        this.host = host;
+    }
+
+    public int getPort() {
+        return port;
+    }
+
+    public void setPort(int port) {
+        this.port = port;
+    }
+
+    public int getMaxNodes() {
+        return maxNodes;
+    }
+
+    public void setMaxNodes(int maxNodes) {
+        this.maxNodes = maxNodes;
+    }
+
+    public int getMaxChannelsPerNode() {
+        return maxChannelsPerNode;
+    }
+
+    public void setMaxChannelsPerNode(int maxChannelsPerNode) {
+        this.maxChannelsPerNode = maxChannelsPerNode;
     }
 
     @Override

@@ -1,14 +1,13 @@
 package com.zhangfuwen.webapp.sensors;
 
-import com.zhangfuwen.collector.CoilOrSensor;
-import com.zhangfuwen.collector.CoilOrSensorRepository;
-import com.zhangfuwen.collector.ZigbeeNode;
-import com.zhangfuwen.collector.ZigbeeNodeRepository;
+import com.zhangfuwen.collector.*;
+import com.zhangfuwen.webapp.user.SysUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -29,11 +28,15 @@ public class ZigbeeNodeController {
     @Autowired
     CoilOrSensorRepository coilOrSensorRepository;
 
+    @Autowired
+    GatewayRepository gatewayRepository;
+
     @RequestMapping(value = "/webapp/nodes", method = RequestMethod.GET)
-    public String list(Model model) {
+    public String list(Model model, @ModelAttribute("gatewayid") Long gatewayid) {
         List<ZigbeeNode> nodes = new ArrayList<ZigbeeNode>();
+        Gateway gateway = gatewayRepository.findOne(gatewayid);
         for(Byte i = 1; i<64;i++) {
-            List<ZigbeeNode> ns = zigbeeNodeRepository.findTop1ByNodeAddrOrderByIdDesc(i);
+            List<ZigbeeNode> ns = zigbeeNodeRepository.findTop1ByNodeAddrAndGatewayOrderByIdDesc(i,gateway);
             if(!ns.isEmpty())
             {
                 ZigbeeNode node = ns.get(0);

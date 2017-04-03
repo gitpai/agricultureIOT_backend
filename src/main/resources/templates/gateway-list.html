@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>网关列表/title>
+    <meta name="description" content="网关列表">
+    <meta name="keywords" content="index">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <link rel="icon" type="image/png" href="/assets/i/favicon.png">
+    <link rel="apple-touch-icon-precomposed" href="/assets/i/app-icon72x72@2x.png">
+    <meta name="apple-mobile-web-app-title" content="Amaze UI"/>
+    <script src="/assets/js/echarts.min.js"></script>
+    <link rel="stylesheet" href="/assets/css/amazeui.min.css"/>
+    <link rel="stylesheet" href="/assets/css/amazeui.datatables.min.css"/>
+    <link rel="stylesheet" href="/assets/css/app.css">
+    <script src="/assets/js/jquery.min.js"></script>
+
+</head>
+
+<body data-type="widgets">
+<script src="/assets/js/theme.js"></script>
+<div class="am-g tpl-g">
+    <div th:include="header::header"></div>
+    <!-- 风格切换 -->
+    <div class="tpl-skiner">
+        <div class="tpl-skiner-toggle am-icon-cog">
+        </div>
+        <div class="tpl-skiner-content">
+            <div class="tpl-skiner-content-title">
+                选择主题
+            </div>
+            <div class="tpl-skiner-content-bar">
+                <span class="skiner-color skiner-white" data-color="theme-white"></span>
+                <span class="skiner-color skiner-black" data-color="theme-black"></span>
+            </div>
+        </div>
+    </div>
+    <!-- 侧边导航栏 -->
+    <div th:include="sidebar"></div>
+
+
+    <!-- 内容区域 -->
+    <div class="tpl-content-wrapper">
+        <div class="row-content am-cf">
+            <div class="row">
+                <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
+                    <div class="widget am-cf">
+                        <div class="widget-head am-cf">
+                            <div class="widget-title  am-cf">网关列表</div>
+
+
+                        </div>
+                        <div class="widget-body  am-fr">
+                            <a sec:authorize="hasRole('ROLE_ADMIN')" class="am-btn am-btn-default"
+                               href="/webapp/gateways/add"
+                            >添加网关
+                            </a>
+                            <a sec:authorize="hasRole('ROLE_CREATOR')" class="am-btn am-btn-default"
+                               href="/webapp/gateways/add"
+                            >添加网关
+                            </a>
+                            <!--用户列表-->
+                            <div class="am-u-sm-12">
+                                <table width="100%" class="am-table am-table-compact am-table-striped tpl-table-black "
+                                       id="example-r">
+                                    <thead>
+                                    <tr>
+                                        <th>网关id</th>
+                                        <th>网关名称</th>
+                                        <th>网关地址</th>
+                                        <th>网关最大节点数</th>
+                                        <th>每节点最大通道数</th>
+                                        <th>管理</th>
+                                    </thead>
+                                    <tbody>
+                                    <tr class="gradeX" th:each="gateway : ${gateways}">
+                                        <td th:text="${gateway.id}">Onions</td>
+                                        <td th:text="${gateway.name}">Onions</td>
+                                        <td th:text="|${gateway.host}:${gateway.port}|">test@test.com.cn</td>
+                                        <td th:text="${gateway.maxNodes}"></td>
+                                        <td th:text="${gateway.maxChannelsPerNode}"></td>
+                                        <td>
+                                            <a class="am-btn am-btn-default"
+                                               th:href="@{/webapp/nodes(gatewayid=${gateway.id})}"
+                                                    >查看读数
+                                            </a>
+                                            <a sec:authorize="hasRole('ROLE_ADMIN')" class="am-btn am-btn-default"
+                                               th:href="@{/webapp/gateways/delete(gatewayid=${gateway.id})}"
+                                            >删除网关
+                                            </a>
+                                            <a sec:authorize="hasRole('ROLE_CREATOR')" class="am-btn am-btn-default"
+                                               th:href="@{/webapp/gateways/delete(gatewayid=${gateway.id})}"
+                                            >删除网关
+                                            </a>
+                                        </td>
+
+                                    </tr>
+
+                                    <!-- more data -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<script src="/assets/js/amazeui.min.js"></script>
+<script src="/assets/js/amazeui.datatables.min.js"></script>
+<script src="/assets/js/dataTables.responsive.min.js"></script>
+<script src="/assets/js/app.js"></script>
+
+</body>
+
+</html>

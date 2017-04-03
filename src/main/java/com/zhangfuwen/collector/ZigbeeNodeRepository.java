@@ -16,4 +16,7 @@ public interface ZigbeeNodeRepository extends PagingAndSortingRepository<ZigbeeN
     List<ZigbeeNode> findTop1ByOrderByIdDesc();
     List<ZigbeeNode> findByNodeAddr(@Param("addr") Byte nodeAddr);
     List<ZigbeeNode> findTop1ByNodeAddrOrderByIdDesc(@Param("addr") Byte nodeAddr);
+    List<ZigbeeNode> findTop1ByNodeAddrAndGatewayOrderByIdDesc(
+            @Param("addr") Byte nodeAddr,
+            @Param("gateway") Gateway gateway);
 }
