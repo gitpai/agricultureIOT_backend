@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<com.zhangfuwen.app devMode="false"
+<com.zhangfuwen.app devMode="true"
         interval="10">
     <com.zhangfuwen.gateway name="myIOTGateway"
             host="192.168.0.222"
