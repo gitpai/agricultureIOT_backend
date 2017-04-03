@@ -2,6 +2,7 @@ package com.zhangfuwen.collector;
 
 import javax.persistence.*;
 import java.io.IOException;
+import java.sql.Date;
 import java.util.HashMap;
 import java.util.Map;
 import com.zhangfuwen.utils.Utils;
@@ -31,6 +32,15 @@ public class CoilOrSensor {
     byte dataType;
     @Column(name="value")
     short value;
+
+    @Column(name="node_addr")
+    byte nodeAddr;
+
+    @Column(name="gateway_id")
+    Long gatewayId;
+
+    @Column(name="created")
+    Date created;
 
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="id")

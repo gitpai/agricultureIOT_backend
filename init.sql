@@ -17,3 +17,10 @@ insert into `t_gateway`(`name`,`ip`, `port`, `max_nodes`, `max_channels`) values
 insert into `t_gateway`(`name`,`ip`, `port`, `max_nodes`, `max_channels`) values ('gateway 5','192.168.1.5', 505, 64,32);
 
 alter table t_zigbee_node add gateway_id int(10) default '1';
+
+alter table t_sensor add gateway_id int(10) default '1';
+alter table t_sensor add node_addr tinyint (4) default '3';
+
+
+alter table t_sensor add created datetime DEFAULT CURRENT_TIMESTAMP;
+update  t_sensor,t_zigbee_node set t_sensor.created=t_zigbee_node.created where t_sensor.readout_id=t_zigbee_node.id;

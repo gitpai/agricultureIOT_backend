@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div class="sensor" th:each="chan : ${sensors}">
+    通道:<span class="channel" th:text="${chan.channel}"></span><br/>
+    传感器类型:<span class="sensorType" th:text="${chan.getSensorTypeString()}"></span><br/>
+    数据类型:<span class="dataType" th:text="${chan.dataType}"></span><br/>
+    数值:<span class="rawvalue" th:text="${chan.getRealValue()}"></span>
+    <a class="am-btn am-btn-default"
+       href="@{/webapp/trend(gatewayid=${chan.gatewayId, nodeaddr=${chan.nodeAddr}, channel=${chan.channel})}">
+        趋势
+    </a>
+
+</div>
+</body>
+</html>

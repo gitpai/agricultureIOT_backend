@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import org.springframework.data.domain.Pageable;
 
+import java.util.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,5 +51,23 @@ public class ZigbeeNodeController {
         }
         model.addAttribute("nodes", nodes);
         return "nodes";
+    }
+
+    @RequestMapping(value="/webapp/trend",method = RequestMethod.GET)
+    public String trend(Model model,
+                        @ModelAttribute(name="gatewayid") Long gatewayid,
+                        @ModelAttribute(name="nodeaddr") Byte nodeaddr,
+                        @ModelAttribute(name="channel") Byte channel
+                        )
+    {
+        long DAY_IN_MS = 1000 * 60 * 60 * 24;
+        Date sevenDayAgo = new Date(System.currentTimeMillis() - (7 * DAY_IN_MS));
+        List<CoilOrSensor> sensors = coilOrSensorRepository.findByGatewayIdAndNodeAddrAndChannelAndCreatedAfter(
+                gatewayid, nodeaddr, channel,
+                sevenDayAgo
+                );
+        logger.info(sensors.toString());
+        model.addAttribute("sensors", sensors);
+        return "trend";
     }
 }
