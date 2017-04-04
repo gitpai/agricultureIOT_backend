@@ -1,5 +1,6 @@
 package com.zhangfuwen.webapp.sensors;
 
+import com.zhangfuwen.Application;
 import com.zhangfuwen.collector.Gateway;
 import com.zhangfuwen.collector.GatewayRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,8 +42,11 @@ public class GatewayController {
                       @ModelAttribute(name="max_nodes") int max_nodes,
                       @ModelAttribute(name="max_channels") int max_channels)
     {
+        Application.gatewayLock.lock();
         Gateway gateway = new Gateway(name,ip, port,max_nodes, max_channels, new HashMap<Byte,String>());
         gatewayRepository.save(gateway);
+        Application.gateways = null;
+        Application.gatewayLock.unlock();
         String referer = "/webapp/gateways";
         redirectAttributes.addFlashAttribute("message", "添加成功");
         redirectAttributes.addFlashAttribute("referer", referer);
@@ -59,7 +63,11 @@ public class GatewayController {
             redirectAttributes.addFlashAttribute("referer", referer);
             return "redirect:/flash";
         }
+
+        Application.gatewayLock.lock();
         gatewayRepository.delete(gatewayid);
+        Application.gateways = null;
+        Application.gatewayLock.unlock();
         String referer = "/webapp/gateways";
         redirectAttributes.addFlashAttribute("message", "删除成功");
         redirectAttributes.addFlashAttribute("referer", referer);
