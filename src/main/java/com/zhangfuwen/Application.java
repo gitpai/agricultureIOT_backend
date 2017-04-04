@@ -35,47 +35,53 @@ public class Application extends SpringBootServletInitializer {
 
     }
 
-    @RequestMapping("/start")
-    public String index(Model model, final RedirectAttributes redirectAttributes) {
-        if (!running) {
-            running = true;
-            // Iterable<Gateway> gateways = gatewayRepository.findAll();
-            List<Gateway> gateways = Persistence.getEntityManager().createQuery("select g from Gateway g").getResultList();
-            //Persistence.getEntityManager().close();
-            new Timer().schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    for (Gateway gateway : gateways) {
-                        if (!config.isDevMode()) {
-                            try {
-                                gateway.init();
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                                continue;
-                            }
-                        }
+//    @RequestMapping("/start")
+//    public String index(Model model, final RedirectAttributes redirectAttributes) {
+//        if (!running) {
+//            running = true;
+//            startCollecting();
+//
+//
+//        }
+//
+//        redirectAttributes.addFlashAttribute("message", "启动成功");
+//        redirectAttributes.addFlashAttribute("referer", "/index");
+//        return "flash";
+//    }
 
-                        System.out.println("scheduled to collect at " + new Date());
+    private static void startCollecting() {
+        // Iterable<Gateway> gateways = gatewayRepository.findAll();
+        List<Gateway> gateways = Persistence.getEntityManager().createQuery("select g from Gateway g").getResultList();
+        //Persistence.getEntityManager().close();
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                for (Gateway gateway : gateways) {
+                    if (!config.isDevMode()) {
                         try {
-                            gateway.collectAndPersist(config.isDevMode(), Persistence.getEntityManager());
+                            gateway.init();
                         } catch (IOException e) {
                             e.printStackTrace();
+                            continue;
                         }
-
                     }
+
+                    System.out.println("scheduled to collect at " + new Date());
+                    try {
+                        gateway.collectAndPersist(config.isDevMode(), Persistence.getEntityManager());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
                 }
-            },0, config.getInterval() * 1000);
-
-        }
-
-        redirectAttributes.addFlashAttribute("message", "启动成功");
-        redirectAttributes.addFlashAttribute("referer", "/index");
-        return "flash";
+            }
+        },0, config.getInterval() * 1000);
     }
 
 
     public static void main(String[] args) {
         config = Config.getInstance();
+        startCollecting();
         SpringApplication.run(Application.class, args);
     }
 }

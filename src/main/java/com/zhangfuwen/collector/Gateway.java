@@ -206,7 +206,7 @@ public class Gateway {
      */
     public void readNodeDummy(ZigbeeNode zigbeeNode) {
         try {
-            Random rand =new Random(25);
+            Random rand =new Random();
             int i;
             i=rand.nextInt(100);
             zigbeeNode.coilOrSensors = new ArrayList<>();
