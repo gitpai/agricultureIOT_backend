@@ -95,7 +95,8 @@ public class ZigbeeNode {
             throw new IOException(String.format("invalid response byte count %d", byteCount));
         }
         for (int i = 0; i < byteCount/4; i++) {
-            coilOrSensors.add(new CoilOrSensor(this, (byte)i, Arrays.copyOfRange(packet.data, i * 4 + 1, i * 4 + 5)));
+            CoilOrSensor sensor = new CoilOrSensor(this, (byte)i, Arrays.copyOfRange(packet.data, i * 4 + 1, i * 4 + 5));
+            coilOrSensors.add(sensor);
         }
     }
 

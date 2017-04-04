@@ -123,6 +123,11 @@ public class Gateway {
                 } else {
                     this.readNode(zigbeeNode);
                 }
+                // fill up gateway id and node addrS
+                for (CoilOrSensor sensor : zigbeeNode.coilOrSensors ) {
+                    sensor.gatewayId = getId();
+                    sensor.nodeAddr = zigbeeNode.getNodeAddr();
+                }
 
                 if (zigbeeNode.valid) {
                     logger.info(String.format("readout collected, " + zigbeeNode.toString()));
