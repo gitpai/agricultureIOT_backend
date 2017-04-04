@@ -4,6 +4,7 @@ import javax.persistence.*;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -143,6 +144,7 @@ public class ZigbeeNode {
         entityManager.getTransaction().begin();
         entityManager.persist(this);
         this.coilOrSensors.forEach(coilOrSensor -> {
+            coilOrSensor.created = new Timestamp(persistDate.getTime());
             if(coilOrSensor.getSensorType()!=0) {// this channel report no data
                 entityManager.persist(coilOrSensor);
             }

@@ -66,8 +66,8 @@ public class Config {
     }
 
     void parseAppConfig() {
-        devMode = Utils.getOnlyTagAttribute(doc, "com/zhangfuwen/webapp","devMode").equals("true");
-        String intervalString = Utils.getOnlyTagAttribute(doc, "com/zhangfuwen/webapp","interval");
+        devMode = Utils.getOnlyTagAttribute(doc, "app","devMode").equals("true");
+        String intervalString = Utils.getOnlyTagAttribute(doc, "app","interval");
         interval = Integer.parseInt(intervalString);
     }
 
@@ -76,9 +76,9 @@ public class Config {
      */
     void parseGatewayConfig() {
         try {
-            String name = Utils.getOnlyTagAttribute(doc, "com/zhangfuwen/collector","name");
-            String host = Utils.getOnlyTagAttribute(doc, "com/zhangfuwen/collector","host");
-            String portString = Utils.getOnlyTagAttribute(doc, "com/zhangfuwen/collector","port");
+            String name = Utils.getOnlyTagAttribute(doc, "gateway","name");
+            String host = Utils.getOnlyTagAttribute(doc, "gateway","host");
+            String portString = Utils.getOnlyTagAttribute(doc, "gateway","port");
             String maxNodesString = Utils.getOnlyTagAttribute(doc,"spec","max_nodes");
             String maxChannelsPerNodeString = Utils.getOnlyTagAttribute(doc,"spec","max_channels_per_node");
             int port = Integer.parseInt(portString);

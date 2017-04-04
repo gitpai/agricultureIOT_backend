@@ -111,7 +111,6 @@ public class CoilOrSensor {
 
     @Override
     public String toString() {
-        SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss.SSS");
         return "CoilOrSensor{" +
                 "id=" + id +
                 ", channel=" + channel +
@@ -120,7 +119,7 @@ public class CoilOrSensor {
                 ", value=" + value +
                 ", nodeAddr=" + nodeAddr +
                 ", gatewayId=" + gatewayId +
-                ", created=" + sdFormat.format(created)+
+                ", created=" + created+
 
                 '}';
     }

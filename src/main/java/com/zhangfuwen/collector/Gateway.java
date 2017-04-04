@@ -112,7 +112,7 @@ public class Gateway {
 
             if (isOnline) {
                 logger.info(String.format("found zigbee device 0x%02x online, collecting readouts...", deviceAddr));
-                String deviceName = (String) this.zigbeeNodeNames.get(new Byte(deviceAddr));
+                String deviceName = this.zigbeeNodeNames!=null?this.zigbeeNodeNames.get(new Byte(deviceAddr)):null;
                 if (deviceName == null) {
                     deviceName = "TBD";
                 }
@@ -124,6 +124,7 @@ public class Gateway {
                     this.readNode(zigbeeNode);
                 }
                 // fill up gateway id and node addrS
+                zigbeeNode.gateway = this;
                 for (CoilOrSensor sensor : zigbeeNode.coilOrSensors ) {
                     sensor.gatewayId = getId();
                     sensor.nodeAddr = zigbeeNode.getNodeAddr();
@@ -205,22 +206,28 @@ public class Gateway {
      */
     public void readNodeDummy(ZigbeeNode zigbeeNode) {
         try {
+            Random rand =new Random(25);
+            int i;
+            i=rand.nextInt(100);
             zigbeeNode.coilOrSensors = new ArrayList<>();
             zigbeeNode.coilOrSensors.add(new CoilOrSensor(zigbeeNode, (byte) 0, new byte[]{
-                    (byte) 0xA1, (byte) 0x81, 0x00, 0x44
+                    (byte) 0xA1, (byte) 0x81, 0x00, (byte)i
             }));
-
+            i=rand.nextInt(100);
             zigbeeNode.coilOrSensors.add(new CoilOrSensor(zigbeeNode, (byte) 1, new byte[]{
-                    (byte) 0xA2, (byte) 0x81, 0x00, 0x34
+                    (byte) 0xA2, (byte) 0x81, 0x00, (byte)i
             }));
+            i=rand.nextInt(100);
             zigbeeNode.coilOrSensors.add(new CoilOrSensor(zigbeeNode, (byte) 2, new byte[]{
-                    (byte) 0xA1, (byte) 0x81, 0x00, 0x24
+                    (byte) 0xA1, (byte) 0x81, 0x00, (byte)i
             }));
+            i=rand.nextInt(100);
             zigbeeNode.coilOrSensors.add(new CoilOrSensor(zigbeeNode, (byte) 3, new byte[]{
-                    (byte) 0xA1, (byte) 0x81, 0x00, 0x14
+                    (byte) 0xA1, (byte) 0x81, 0x00, (byte)i
             }));
+            i=rand.nextInt(100);
             zigbeeNode.coilOrSensors.add(new CoilOrSensor(zigbeeNode, (byte) 4, new byte[]{
-                    (byte) 0xA1, (byte) 0x81, 0x00, 0x04
+                    (byte) 0xA1, (byte) 0x81, 0x00, (byte)i
             }));
             zigbeeNode.valid = true;
         } catch (IOException e) {
