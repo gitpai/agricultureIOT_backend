@@ -82,7 +82,7 @@
                                                             数据类型:<span class="dataType" th:text="${chan.dataType}"></span><br/>
                                                             数值:<span class="rawvalue" th:text="${chan.getRealValue()}"></span>
                                                         <a class="am-btn am-btn-default"
-                                                           href="@{/webapp/trend(gatewayid=${node.gateway.id, nodeaddr=${node.nodeAddr}, channel=${chan.channel})}">
+                                                           th:href="@{/webapp/trend(gatewayid=${chan.gatewayId}, nodeaddr=${chan.nodeAddr}, channel=${chan.channel})}">
                                                             趋势
                                                         </a>
 

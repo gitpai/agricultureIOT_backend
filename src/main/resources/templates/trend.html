@@ -1,20 +1,99 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Amaze UI Admin index Examples</title>
+    <meta name="description" content="这是一个 index 页面">
+    <meta name="keywords" content="index">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <link rel="icon" type="image/png" href="/assets/i/favicon.png">
+    <link rel="apple-touch-icon-precomposed" href="/assets/i/app-icon72x72@2x.png">
+    <meta name="apple-mobile-web-app-title" content="Amaze UI" />
+    <script src="/assets/js/echarts.min.js"></script>
+    <link rel="stylesheet" href="/assets/css/amazeui.min.css" />
+    <link rel="stylesheet" href="/assets/css/amazeui.datatables.min.css" />
+    <link rel="stylesheet" href="/assets/css/app.css">
+    <script src="/assets/js/jquery.min.js"></script>
 </head>
 <body>
-<div class="sensor" th:each="chan : ${sensors}">
-    通道:<span class="channel" th:text="${chan.channel}"></span><br/>
-    传感器类型:<span class="sensorType" th:text="${chan.getSensorTypeString()}"></span><br/>
-    数据类型:<span class="dataType" th:text="${chan.dataType}"></span><br/>
-    数值:<span class="rawvalue" th:text="${chan.getRealValue()}"></span>
-    <a class="am-btn am-btn-default"
-       href="@{/webapp/trend(gatewayid=${chan.gatewayId, nodeaddr=${chan.nodeAddr}, channel=${chan.channel})}">
-        趋势
-    </a>
+<div id="main" style="width: 600px;height:400px;"></div>
+<div id="data" th:text="${sensors}"  style="display: none;"></div>
+<!--<div class="sensor" th:each="chan : ${sensors}">-->
+    <!--通道:<span class="channel" th:text="${chan.channel}"></span><br/>-->
+    <!--传感器类型:<span class="sensorType" th:text="${chan.getSensorTypeString()}"></span><br/>-->
+    <!--数据类型:<span class="dataType" th:text="${chan.dataType}"></span><br/>-->
+    <!--数值:<span class="rawvalue" th:text="${chan.getRealValue()}"></span>-->
 
-</div>
+<!--</div>-->
+<script>
+    function strToJson(str){
+        var json = eval('(' + str + ')');
+        return json;
+    }
+</script>
+<script type="text/javascript">
+    var dataDiv = document.getElementById("data");
+    var dataStr = dataDiv.innerText;
+    var dataJson = strToJson(dataStr);
+    var xData = Array();
+    var yData = Array();
+    dataJson.forEach(function (e) {
+        xData.push(e.created);
+        yData.push(e.realValue);
+    });
+    // 基于准备好的dom，初始化echarts实例
+    var myChart = echarts.init(document.getElementById('main'));
+
+    // 指定图表的配置项和数据
+    var option = {
+        title : {
+            text: '趋势',
+        },
+        tooltip : {
+            trigger: 'axis'
+        },
+        legend: {
+            data:['趋势值']
+        },
+        toolbox: {
+            show : true,
+            feature : {
+                mark : {show: true},
+                dataView : {show: true, readOnly: false},
+                magicType : {show: true, type: ['line', 'bar', 'stack', 'tiled']},
+                restore : {show: true},
+                saveAsImage : {show: true}
+            }
+        },
+        calculable : true,
+        xAxis : [
+            {
+                type : 'category',
+                boundaryGap : false,
+                data : xData,
+            }
+        ],
+        yAxis : [
+            {
+                type : 'value'
+            }
+        ],
+        series : [
+            {
+                name:'成交',
+                type:'line',
+                smooth:true,
+                itemStyle: {normal: {areaStyle: {type: 'default'}}},
+                data:yData,
+            },
+        ]
+    };
+
+    // 使用刚指定的配置项和数据显示图表。
+    myChart.setOption(option);
+</script>
 </body>
 </html>

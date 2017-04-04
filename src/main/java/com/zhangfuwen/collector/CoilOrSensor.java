@@ -3,6 +3,8 @@ package com.zhangfuwen.collector;
 import javax.persistence.*;
 import java.io.IOException;
 import java.sql.Date;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
 import com.zhangfuwen.utils.Utils;
@@ -34,13 +36,13 @@ public class CoilOrSensor {
     short value;
 
     @Column(name="node_addr")
-    byte nodeAddr;
+    public byte nodeAddr;
 
     @Column(name="gateway_id")
-    Long gatewayId;
+    public Long gatewayId;
 
     @Column(name="created")
-    Date created;
+    public Timestamp created;
 
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="id")
@@ -107,9 +109,19 @@ public class CoilOrSensor {
 
     }
 
-
+    @Override
     public String toString() {
-        return "type\t:"+Integer.toHexString(sensorType) +", dataType:" +Integer.toHexString(this.dataType) +
-                ", value\t:" + Integer.toHexString(value);
+        SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss.SSS");
+        return "CoilOrSensor{" +
+                "id=" + id +
+                ", channel=" + channel +
+                ", sensorType=" + sensorType +
+                ", dataType=" + dataType +
+                ", value=" + value +
+                ", nodeAddr=" + nodeAddr +
+                ", gatewayId=" + gatewayId +
+                ", created=" + sdFormat.format(created)+
+
+                '}';
     }
 }

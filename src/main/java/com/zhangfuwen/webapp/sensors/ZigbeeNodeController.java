@@ -1,5 +1,6 @@
 package com.zhangfuwen.webapp.sensors;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.zhangfuwen.collector.*;
 import com.zhangfuwen.webapp.user.SysUser;
 import org.slf4j.Logger;
@@ -13,9 +14,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import org.springframework.data.domain.Pageable;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.ArrayList;
 import java.util.List;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * Created by dean on 4/2/17.
@@ -61,13 +64,23 @@ public class ZigbeeNodeController {
                         )
     {
         long DAY_IN_MS = 1000 * 60 * 60 * 24;
-        Date sevenDayAgo = new Date(System.currentTimeMillis() - (7 * DAY_IN_MS));
+        Date sevenDayAgo = new Date(System.currentTimeMillis() - (30 * DAY_IN_MS));
         List<CoilOrSensor> sensors = coilOrSensorRepository.findByGatewayIdAndNodeAddrAndChannelAndCreatedAfter(
                 gatewayid, nodeaddr, channel,
                 sevenDayAgo
                 );
         logger.info(sensors.toString());
-        model.addAttribute("sensors", sensors);
+        String sensorsString;
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
+        try {
+            sensorsString = mapper.writeValueAsString(sensors);
+        }catch (JsonProcessingException e) {
+            logger.error(e.getMessage());
+            return "redirect:/";
+        }
+
+        model.addAttribute("sensors", sensorsString);
         return "trend";
     }
 }
