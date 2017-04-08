@@ -45,7 +45,7 @@ public class Application extends SpringBootServletInitializer {
                         }
                     }
 
-                    System.out.println("scheduled to collect at " + new Date());
+                    //System.out.println("scheduled to collect at " + new Date());
                     try {
                         gateway.collectAndPersist(config.isDevMode(), Persistence.getEntityManager());
                     } catch (IOException e) {

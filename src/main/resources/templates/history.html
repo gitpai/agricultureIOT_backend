@@ -60,7 +60,7 @@
                                 <div class="row am-cf">
                                     <div class="am-form-group am-u-md-4 am-u-lg-4 am-u-sm-12 am-u-xs-12">
                                         <label for="gateway" class="am-form-label">网关</label>
-                                        <select name="gateway" id="gateway" >
+                                        <select name="gateway" id="gateway">
                                             <option th:each="gateway : ${gateways}" th:value="${gateway.id}"
                                                     th:text="|${gateway.host}:${gateway.port}|"></option>
                                         </select>
@@ -68,41 +68,49 @@
 
                                     <div class="am-form-group am-u-md-4 am-u-lg-4 am-u-sm-12 am-u-xs-12">
                                         <label for="node" class="am-form-label">节点</label>
-                                        <select name="node" id="node" >
-                                            <option th:each="node :${#numbers.sequence( 0, 64)}" th:value="${node}" th:text="${node}"></option>
+                                        <select name="node" id="node">
+                                            <option th:each="node :${#numbers.sequence( 1, 64)}" th:value="${node}"
+                                                    th:text="${node}"></option>
                                         </select>
                                     </div>
 
                                     <div class="am-form-group am-u-md-4 am-u-lg-4 am-u-sm-12 am-u-xs-12">
                                         <label for="chan" class="am-form-label">通道</label>
-                                        <select name="chan" id="chan" >
-                                            <option th:each="chan :${#numbers.sequence( 0, 31)}" th:value="${chan}" th:text="${chan}"></option>
+                                        <select name="chan" id="chan">
+                                            <option th:each="chan :${#numbers.sequence( 0, 31)}" th:value="${chan}"
+                                                    th:text="${chan}"></option>
                                         </select>
                                     </div>
                                 </div>
 
                                 <div class="row am-cf">
-                                    <div class="am-form-group am-u-md-4 am-u-lg-4 am-u-sm-12 am-u-xs-12">
-                                    <input type="radio" name="historyType" value="week"/>周数据<br/>
-                                    <input type="radio" name="historyType" value="day"/>日数据<br/>
-                                    <input type="radio" name="historyType" value="hour"/>时数据<br/>
+                                    <div class="am-form-group am-radio-inline am-u-md-12 am-u-lg-12 am-u-sm-12 am-u-xs-12">
+                                        <label class="am-radio-inline"><input type="radio" name="historyType" value="week"/>周数据</label>
+                                        <label class="am-radio-inline"><input type="radio" name="historyType" value="day"/>日数据</label>
+                                        <label class="am-radio-inline"><input type="radio" name="historyType" value="hour"/>时数据</label>
                                     </div>
+
                                 </div>
-                                <!--choose day-->
-                                <div class="am-form-group" id="date-chooser">
-                                    <label for="date" class="am-u-sm-3 am-form-label">日期</label>
-                                    <input type="date" name="date" id="date">
-                                </div>
-                                <!--choose hour range-->
-                                <div class="am-form-group" id="hour-chooser">
-                                    <label class="am-u-sm-3 am-form-label">起止时间</label>
-                                    <input type="text" id="datetime1" name="start">
-                                    <input type="text" id="datetime2" name="end">
+                                <div class="row am-cf">
+                                    <div class="am-form-group am-u-md-3 am-u-lg-3 am-u-sm-12 am-u-xs-12">
+                                        <!--choose day-->
+                                        <div class="am-form-group" id="date-chooser">
+                                            <label for="date" class="am-form-label">日期</label>
+                                            <input type="text" name="date" id="date">
+                                        </div>
+                                        <!--choose hour range-->
+                                        <div class="am-form-group" id="hour-chooser">
+                                            <label class="am-form-label">起止时间</label>
+                                            <input type="text" id="datetime1" name="start">
+                                            <input type="text" id="datetime2" name="end">
+                                        </div>
+                                    </div>
+
                                 </div>
 
                                 <button type="button" id="query">查询</button>
                             </form>
-                            <div class="graph"></div>
+                            <div id="graph"></div>
                         </div>
                     </div>
                 </div>
@@ -116,16 +124,18 @@
 <script src="/assets/js/amazeui.datatables.min.js"></script>
 <script src="/assets/js/dataTables.responsive.min.js"></script>
 <script src="/assets/js/app.js"></script>
-<link rel="stylesheet" type="text/css" href="/assets/css/jquery.datetimepicker.css"/ >
+<link rel="stylesheet" type="text/css" href="/assets/css/jquery.datetimepicker.css" />
 <script src="/jquery.js"></script>
-<script src="/assets/js/jquery.datetimepicker.min.js"></script>
+<script src="/assets/js/jquery.datetimepicker.full.min.js"></script>
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
         jQuery('#datetime1').datetimepicker();
         jQuery('#datetime2').datetimepicker();
+        $('#date').datepicker();
+
         $("#date-chooser").hide();
         $("#hour-chooser").hide();
-        $('input[type=radio][name=historyType]').change(function() {
+        $('input[type=radio][name=historyType]').change(function () {
             if (this.value == 'day') {
                 $("#date-chooser").show();
                 $("#hour-chooser").hide();
@@ -134,29 +144,34 @@
                 $("#date-chooser").hide();
                 $("#hour-chooser").hide();
             }
-            else if(this.value = 'hour') {
+            else if (this.value = 'hour') {
                 $("#hour-chooser").show();
                 $("#date-chooser").hide();
             }
         });
         $("#query").click(function () {
-            var gateway = $( "#gateway option:selected" ).val();
-            var node = $( "#node option:selected" ).val();
-            var chan = $( "#chan option:selected" ).val();
+            var gateway = $("#gateway option:selected").val();
+            var node = $("#node option:selected").val();
+            var chan = $("#chan option:selected").val();
             var historyType = $("input[name='historyType']:checked").val();
             var date = $("#date").val();
-            var start = $("#start").val();
-            var end = $("#end").val();
+            var start = $("#datetime1").val();
+            var end = $("#datetime2").val();
 
-            var url="/webapp/trend?gatewayid="+gateway +"&nodeaddr="+node +"&channel="+chan +"&historyType="+historyType;
-            if(historyType=="day") {
-                url+="&date="+date;
-            }else if(historyType=="hour") {
-                url+="&start="+start +"&end="+end;
+            var url = "/webapp/trend?gatewayid=" + gateway + "&nodeaddr=" + node + "&channel=" + chan + "&historyType=" + historyType;
+            if (historyType == "day") {
+                url += "&date=" + date;
+            } else if (historyType == "hour") {
+                url += "&start=" + start + "&end=" + end;
             }
             console.log(url);
-            window.open(url);
+            //window.open(url);
+            //url="http://www.baidu.com";
+            $("#graph").css("width","100%");
+            $("#graph").html("<iframe src='http://localhost:8080/"+url+"'></iframe>");
         })
+
+
     });
 </script>
 

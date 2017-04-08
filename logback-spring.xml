@@ -25,13 +25,13 @@
     </appender>
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>%-4relative [%thread] %-5level %logger{35} - %msg %n</pattern>
+            <pattern>%-4relative [%thread] %-5level %logger{35}:%c%L - %msg %n</pattern>
         </encoder>
     </appender>
 
-    <logger name="com.mkyong.web" level="debug"
+    <logger name="com.zhangfuwen.collector.Gateway" level="error"
             additivity="false">
-        <appender-ref ref="FILE-AUDIT" />
+        <appender-ref ref="STDOUT" />
     </logger>
     <root level="DEBUG">
         <appender-ref ref="STDOUT" />

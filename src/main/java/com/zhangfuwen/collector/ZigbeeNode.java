@@ -139,7 +139,7 @@ public class ZigbeeNode {
      */
     void persist(EntityManager entityManager) throws IOException {
         Date persistDate = new Date();
-        System.out.println("collecting "+Integer.toHexString(this.getNodeAddr()));
+        //System.out.println("collecting "+Integer.toHexString(this.getNodeAddr()));
         this.created = persistDate;
         entityManager.getTransaction().begin();
         entityManager.persist(this);
@@ -150,7 +150,7 @@ public class ZigbeeNode {
             }
         });
         entityManager.getTransaction().commit();
-        System.out.println("done");
+        //System.out.println("done");
     }
 
     /**

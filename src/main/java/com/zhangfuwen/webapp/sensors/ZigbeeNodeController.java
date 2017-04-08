@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * Created by dean on 4/2/17.
@@ -91,8 +92,8 @@ public class ZigbeeNodeController {
                 since = new Timestamp(date2.getTime());
                 until = new Timestamp(since.getTime() + DAY_IN_MS);
             } else if ("hour".equals(historyType)) {
-                start2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(start);
-                end2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(end);
+                start2 = new SimpleDateFormat("yyyy/MM/dd HH:mm").parse(start);
+                end2 = new SimpleDateFormat("yyyy/MM/dd HH:mm").parse(end);
                 since = new Timestamp(start2.getTime());
                 until = new Timestamp(end2.getTime());
             }else{
@@ -102,10 +103,15 @@ public class ZigbeeNodeController {
             logger.error(e.getMessage());
             return "error";
         }
+        logger.info(since.toString()+"  " + until.toString());
         List<CoilOrSensor> sensors = coilOrSensorRepository.findByGatewayIdAndNodeAddrAndChannelAndCreatedBetween(
                 gatewayid, nodeaddr, channel,
                 since, until
         );
+//        List<CoilOrSensor> sensors = coilOrSensorRepository.findByGatewayIdAndNodeAddrAndChannelAndCreatedAfter(
+//                gatewayid,nodeaddr,channel,
+//                since
+//        );
         logger.info(sensors.toString());
         String sensorsString;
         ObjectMapper mapper = new ObjectMapper();
