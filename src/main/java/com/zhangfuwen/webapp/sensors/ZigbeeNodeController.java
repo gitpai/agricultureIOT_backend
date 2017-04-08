@@ -8,9 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import org.springframework.data.domain.Pageable;
 
@@ -22,7 +20,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.web.bind.annotation.RestController;
+
+import javax.persistence.PersistenceContext;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * Created by dean on 4/2/17.
@@ -67,6 +67,7 @@ public class ZigbeeNodeController {
 
 
     @RequestMapping(value = "/webapp/trend", method = RequestMethod.GET)
+    @ResponseBody
     public String trend(Model model,
                         @ModelAttribute(name = "gatewayid") Long gatewayid,
                         @ModelAttribute(name = "nodeaddr") Byte nodeaddr,
@@ -103,7 +104,7 @@ public class ZigbeeNodeController {
             logger.error(e.getMessage());
             return "error";
         }
-        logger.info(since.toString()+"  " + until.toString());
+        //logger.info(since.toString()+"  " + until.toString());
         List<CoilOrSensor> sensors = coilOrSensorRepository.findByGatewayIdAndNodeAddrAndChannelAndCreatedBetween(
                 gatewayid, nodeaddr, channel,
                 since, until
@@ -112,7 +113,7 @@ public class ZigbeeNodeController {
 //                gatewayid,nodeaddr,channel,
 //                since
 //        );
-        logger.info(sensors.toString());
+        //logger.info(sensors.toString());
         String sensorsString;
         ObjectMapper mapper = new ObjectMapper();
         mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
@@ -123,7 +124,8 @@ public class ZigbeeNodeController {
             return "redirect:/";
         }
 
-        model.addAttribute("sensors", sensorsString);
-        return "trend";
+        return sensorsString;
+        //model.addAttribute("sensors", sensorsString);
+        //return "trend";
     }
 }
