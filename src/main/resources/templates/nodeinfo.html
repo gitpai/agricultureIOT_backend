@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>节点命令管理</title>
+    <meta name="description" content="这是一个 index 页面">
+    <meta name="keywords" content="index">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <link rel="icon" type="image/png" href="/assets/i/favicon.png">
+    <link rel="apple-touch-icon-precomposed" href="/assets/i/app-icon72x72@2x.png">
+    <meta name="apple-mobile-web-app-title" content="Amaze UI"/>
+    <script src="/assets/js/echarts.min.js"></script>
+    <link rel="stylesheet" href="/assets/css/amazeui.min.css"/>
+    <link rel="stylesheet" href="/assets/css/amazeui.datatables.min.css"/>
+    <link rel="stylesheet" href="/assets/css/app.css">
+    <script src="/assets/js/jquery.min.js"></script>
+
+</head>
+
+<body data-type="widgets">
+<script src="/assets/js/theme.js"></script>
+<div class="am-g tpl-g">
+    <div th:include="header::header"></div>
+    <!-- 风格切换 -->
+    <div class="tpl-skiner">
+        <div class="tpl-skiner-toggle am-icon-cog">
+        </div>
+        <div class="tpl-skiner-content">
+            <div class="tpl-skiner-content-title">
+                选择主题
+            </div>
+            <div class="tpl-skiner-content-bar">
+                <span class="skiner-color skiner-white" data-color="theme-white"></span>
+                <span class="skiner-color skiner-black" data-color="theme-black"></span>
+            </div>
+        </div>
+    </div>
+    <!-- 侧边导航栏 -->
+    <div th:include="sidebar"></div>
+
+
+    <!-- 内容区域 -->
+    <div class="tpl-content-wrapper">
+        <div class="row-content am-cf">
+            <div class="row">
+                <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
+                    <div class="widget am-cf">
+                        <div class="widget-head am-cf">
+                            <div class="widget-title  am-cf">
+                                <form class="am-form tpl-form-line-form row">
+                                    <div class="row am-cf">
+                                        <div class="am-form-group am-u-md-4 am-u-lg-4 am-u-sm-12 am-u-xs-12">
+                                            <label for="gateway" class="am-form-label">网关</label>
+                                            <select name="gateway" id="gateway">
+                                                <!--<option th:each="gateway : ${gateways}" th:value="${gateway.id}"-->
+                                                <!--th:text="|${gateway.host}:${gateway.port}|"></option>-->
+                                            </select>
+                                            <button id="query">查看</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="widget-body  am-fr">
+                            <button id="new" >新建</button>
+                            <form id="new_node_info_form" action="/webapp/nodeinfo/add" method="post">
+                                <label>网关<input id="gatewayId" name="gatewayId"/></label>
+                                <label>节点地址<input id="nodeAddr" name="nodeAddr"/></label>
+                                <label>节点名称<input id="nodeName" name="nodeName"/></label>
+                                <label>X<input id="X" name="X"/></label>
+                                <label>Y<input id="Y" name="Y"/></label>
+                                <label>描述<input id="desc" name="desc"/></label>
+                                <label>图片<input id="pic" name="pic"/></label>
+                                <button id="submit">提交</button>
+                            </form>
+                            <div id="list" style="width: 100%;height:400px;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+<script src="/assets/js/amazeui.min.js"></script>
+<script src="/assets/js/amazeui.datatables.min.js"></script>
+<script src="/assets/js/dataTables.responsive.min.js"></script>
+<script src="/assets/js/app.js"></script>
+
+<script>
+    function updateGatewayList() {
+        $.getJSON("http://localhost:8080/api/gateways", function(json) {
+            $("#gateway").empty();
+            json.forEach(function(e){
+                $("#gateway").append("<option value='"+e.id +"'> "+e.host+":"+e.port+"</option>");
+            })
+        });
+    }
+    $(document).ready(function () {
+
+        updateGatewayList();
+       $("#query").click(function () {
+            var gateway = $("#gateway option:selected").val();
+
+           $.getJSON("http://localhost:8080/nodeInfoes/search/findByGatewayId?id=1", function (e) {
+               e._embedded.nodeInfoes.forEach( function (nodeinfo) {
+                  $("#list").append("<li>"+nodeinfo.)
+               })
+           });
+        });
+       
+       $("#submit").click(function () {
+           var post_url = $("#new_node_info_form").attr("action");
+           $.ajax({
+               url: post_url,
+               type: 'post',
+               dataType: 'json',
+               data: $('form#new_node_info_form').serialize(),
+               success: function() {
+                   updateGatewayList();
+               }
+           });
+       })
+
+
+    });
+</script>
+
+</body>
+
+</html>

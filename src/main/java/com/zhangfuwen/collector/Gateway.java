@@ -32,6 +32,17 @@ public class Gateway {
     @Column(name = "max_channels")
     int maxChannelsPerNode;
 
+    @Column(name="poll_interval")
+    int interval;
+    @Column(name="X")
+    float X;
+    @Column(name = "Y")
+    float Y;
+    @Column(name="desc_string")
+    String desc;
+    @Column(name="pic")
+    String pic;
+
     @OneToMany(targetEntity = ZigbeeNode.class,mappedBy = "gateway")
     List<ZigbeeNode> nodes;
 
