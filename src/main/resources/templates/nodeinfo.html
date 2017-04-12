@@ -51,24 +51,23 @@
                     <div class="widget am-cf">
                         <div class="widget-head am-cf">
                             <div class="widget-title  am-cf">
-                                <form class="am-form tpl-form-line-form row">
-                                    <div class="row am-cf">
-                                        <div class="am-form-group am-u-md-4 am-u-lg-4 am-u-sm-12 am-u-xs-12">
-                                            <label for="gateway" class="am-form-label">网关</label>
-                                            <select name="gateway" id="gateway">
-                                                <!--<option th:each="gateway : ${gateways}" th:value="${gateway.id}"-->
-                                                <!--th:text="|${gateway.host}:${gateway.port}|"></option>-->
-                                            </select>
-                                            <button id="query">查看</button>
-                                        </div>
+                                <div class="row am-cf">
+                                    <div class="am-form-group am-u-md-4 am-u-lg-4 am-u-sm-12 am-u-xs-12">
+                                        <label for="gateway" class="am-form-label">网关</label>
+                                        <select name="gateway" id="gateway">
+                                            <!--<option th:each="gateway : ${gateways}" th:value="${gateway.id}"-->
+                                            <!--th:text="|${gateway.host}:${gateway.port}|"></option>-->
+                                        </select>
+                                        <button id="query">查看</button>
                                     </div>
-                                </form>
+                                </div>
                             </div>
                         </div>
                         <div class="widget-body  am-fr">
                             <button id="new-button" type="button"
                                     class="am-btn am-btn-primary"
-                            > 新建 </button>
+                            > 新建
+                            </button>
 
                             <div id="doc-modal-1" class="am-modal am-modal-prompt" tabindex="-1">
                                 <div class="am-modal-dialog">
@@ -79,20 +78,26 @@
                                     <div class="am-modal-bd">
                                         <form id="new_node_info_form" class="am-form tpl-form-line-form "
                                               action="/webapp/nodeinfo/add" method="post">
+                                            <input type="hidden" th:name="${_csrf.parameterName}"
+                                                   th:value="${_csrf.token}"/>
                                             <div class="am-form-group">
-                                                <input type="text" class="tpl-form-input am-modal-prompt-input" id="gatewayId"
+                                                <input type="text" class="tpl-form-input am-modal-prompt-input"
+                                                       id="gatewayId"
                                                        name="gatewayId"
                                                        placeholder="网关id"/>
                                             </div>
 
                                             <div class="am-form-group">
-                                                <input type="text" class="tpl-form-input" id="nodeAddr"
-                                                       name="nodeAddr" placeholder="节点地址"/>
+                                                <select type="text" class="tpl-form-input" id="nodeAddr"
+                                                        name="nodeAddr" placeholder="节点地址">
+                                                    <option th:each="addr :${#numbers.sequence( 1, 64)}"
+                                                            th:value="${addr}" th:text="${addr}"></option>
+                                                </select>
                                             </div>
 
                                             <div class="am-form-group">
                                                 <input type="text" class="tpl-form-input" id="nodeName"
-                                                       name="nodeName" placeholder="节点名称"/>
+                                                       name="nodeName" placeholder="定义一个节点名称"/>
                                             </div>
                                             <div class="am-form-group">
                                                 <input type="text" class="tpl-form-input" id="X" name="X"
@@ -117,7 +122,24 @@
                                     </div>
                                 </div>
                             </div>
-                            <div id="list" style="width: 100%;height:400px;"></div>
+                            <div style="width: 100%;height:400px;">
+                                <table class="am-table am-table-compact am-table-striped tpl-table-black " >
+                                    <thead>
+                                    <th>网关id</th>
+                                    <th>节点名称</th>
+                                    <th>节点地址</th>
+                                    <th>X</th>
+                                    <th>Y</th>
+                                    <th>描述</th>
+                                    <th>图片</th>
+                                    <th>操作</th>
+                                    </thead>
+                                    <tbody id="list">
+
+                                    </tbody>
+
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -145,13 +167,32 @@
 
         updateGatewayList();
         $("#query").click(function () {
+            $("#list").empty();
             var gateway = $("#gateway option:selected").val();
+            console.log(gateway);
 
-            $.getJSON("http://localhost:8080/nodeInfoes/search/findByGatewayId?id=1", function (e) {
+            $.getJSON("http://localhost:8080/nodeInfoes/search/findByGatewayId?id="+gateway, function (e) {
                 e._embedded.nodeInfoes.forEach(function (nodeinfo) {
-                    //$("#list").append("<li>"+nodeinfo.)
+                    $("#list").append("<tr class='gradeX'>" + "" +
+                        "<td>" + nodeinfo.gatewayId + "</td>" +
+                        "<td>" + nodeinfo.nodeName + "</td>" +
+                        "<td>" + nodeinfo.nodeAddr + "</td>" +
+                        "<td>" + nodeinfo.x + "</td>" +
+                        "<td>" + nodeinfo.y + "</td>" +
+                        "<td>" + nodeinfo.desc + "</td>" +
+                        "<td>" + nodeinfo.pic + "</td>" +
+                        "<td><a class='del' href='/webapp/delnodeinfo?gatewayid=" + nodeinfo.gatewayId+"&nodeaddr=" + nodeinfo.nodeAddr + "'>删除</a></td>"
+                    );
                 })
             });
+        });
+
+        $('form').bind('submit',function(e){e.preventDefault();});
+        $('.del').bind('click',function(e){e.preventDefault();});
+
+        $(".del").click(function (e) {
+            console.log(e);
+
         });
 
         $("#submit").click(function () {
@@ -165,10 +206,12 @@
                     updateGatewayList();
                 }
             });
-        })
+        });
 
         // new button handler
         $('#new-button').on('click', function () {
+
+            $("#gatewayId").val($("#gateway").val());
             $('#doc-modal-1').modal({
                 relatedTarget: this,
                 onConfirm: function (e) {

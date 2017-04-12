@@ -24,6 +24,14 @@ alter table t_gateway add  X FLOAT DEFAULT 0;
 ALTER TABLE t_gateway add Y FLOAT DEFAULT 0;
 ALTER TABLE t_gateway add desc_string char(250);
 ALTER TABLE t_gateway add pic char(250);
+create table t_nodeinfo(id BIGINT(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                        gateway_id BIGINT(20),
+                        node_addr TINYINT(3),
+                        node_name char(250),
+                        X FLOAT DEFAULT 0,
+                        Y FLOAT DEFAULT 0,
+                        desc_string char(250),
+                        pic char(250));
 
 #==============================
 
@@ -38,14 +46,7 @@ alter table t_sensor add created datetime DEFAULT CURRENT_TIMESTAMP;
 update  t_sensor,t_zigbee_node set t_sensor.created=t_zigbee_node.created where t_sensor.readout_id=t_zigbee_node.id;
 
 
-create table t_nodeinfo(id BIGINT(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-                        gateway_id BIGINT(20),
-                        node_addr TINYINT(3),
-                        node_name char(250),
-                        X FLOAT DEFAULT 0,
-                        Y FLOAT DEFAULT 0,
-                        desc_string char(250),
-                        pic char(250));
+
 
 create table t_warning(id bigint(20) NOT NULL PRIMARY KEY ,
                         threashold_id bigint(20) NOT NULL ,

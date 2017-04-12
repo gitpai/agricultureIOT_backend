@@ -11,6 +11,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -40,18 +42,18 @@ public class NodeInfoController {
     }
 
     @RequestMapping(value = "/webapp/delnodeinfo", method = RequestMethod.GET)
-    @ResponseBody
-    public String delNodeInfo(Model model, @ModelAttribute("gatewayid") Long gatewayid, @ModelAttribute("nodeaddr") Byte nodeaddr) {
+    public ResponseEntity<String> delNodeInfo(Model model, @ModelAttribute("gatewayid") Long gatewayid, @ModelAttribute("nodeaddr") Byte nodeaddr) {
         NodeInfo nodeInfo = nodeInfoRepository.findTop1ByGatewayIdAndNodeAddr(gatewayid,nodeaddr);
         nodeInfoRepository.delete(nodeInfo);
-        return "ok";
+        //return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        return ResponseEntity.ok("");
     }
 
     @RequestMapping(value = "/webapp/nodeinfo/add", method = RequestMethod.POST)
-    @ResponseBody
-    public String addNodeInfo(Model model, @ModelAttribute("nodeInfoFrom") NodeInfo nodeInfoFrom) {
+    public ResponseEntity<String> addNodeInfo(Model model, @ModelAttribute("nodeInfoFrom") NodeInfo nodeInfoFrom) {
         nodeInfoRepository.save(nodeInfoFrom);
-        return "ok";
+        return ResponseEntity.ok("");
+
     }
 
 }

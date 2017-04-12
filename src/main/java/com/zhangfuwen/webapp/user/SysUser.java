@@ -24,6 +24,8 @@ public class SysUser implements UserDetails {
     private String passwordConfirm;
 
     @ManyToMany(cascade = {CascadeType.REFRESH},fetch = FetchType.EAGER)
+    @JoinTable(name="sys_user_roles",
+            joinColumns={@JoinColumn(name="sys_user_id")}, inverseJoinColumns={@JoinColumn(name="roles_id")})
     private List<SysRole> roles;
 
     public Long getId() {
