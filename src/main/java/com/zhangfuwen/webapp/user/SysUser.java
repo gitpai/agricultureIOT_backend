@@ -13,6 +13,7 @@ import java.util.List;
  * Created by dean on 3/26/17.
  */
 @Entity
+@Table(name="sys_user")
 public class SysUser implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

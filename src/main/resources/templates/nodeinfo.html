@@ -66,17 +66,57 @@
                             </div>
                         </div>
                         <div class="widget-body  am-fr">
-                            <button id="new" >新建</button>
-                            <form id="new_node_info_form" action="/webapp/nodeinfo/add" method="post">
-                                <label>网关<input id="gatewayId" name="gatewayId"/></label>
-                                <label>节点地址<input id="nodeAddr" name="nodeAddr"/></label>
-                                <label>节点名称<input id="nodeName" name="nodeName"/></label>
-                                <label>X<input id="X" name="X"/></label>
-                                <label>Y<input id="Y" name="Y"/></label>
-                                <label>描述<input id="desc" name="desc"/></label>
-                                <label>图片<input id="pic" name="pic"/></label>
-                                <button id="submit">提交</button>
-                            </form>
+                            <button id="new-button" type="button"
+                                    class="am-btn am-btn-primary"
+                            > 新建 </button>
+
+                            <div id="doc-modal-1" class="am-modal am-modal-prompt" tabindex="-1">
+                                <div class="am-modal-dialog">
+                                    <div class="am-modal-hd">新建
+                                        <a href="javascript: void(0)" class="am-close am-close-spin"
+                                           data-am-modal-close>&times;</a>
+                                    </div>
+                                    <div class="am-modal-bd">
+                                        <form id="new_node_info_form" class="am-form tpl-form-line-form "
+                                              action="/webapp/nodeinfo/add" method="post">
+                                            <div class="am-form-group">
+                                                <input type="text" class="tpl-form-input am-modal-prompt-input" id="gatewayId"
+                                                       name="gatewayId"
+                                                       placeholder="网关id"/>
+                                            </div>
+
+                                            <div class="am-form-group">
+                                                <input type="text" class="tpl-form-input" id="nodeAddr"
+                                                       name="nodeAddr" placeholder="节点地址"/>
+                                            </div>
+
+                                            <div class="am-form-group">
+                                                <input type="text" class="tpl-form-input" id="nodeName"
+                                                       name="nodeName" placeholder="节点名称"/>
+                                            </div>
+                                            <div class="am-form-group">
+                                                <input type="text" class="tpl-form-input" id="X" name="X"
+                                                       placeholder="X"/>
+                                            </div>
+                                            <div class="am-form-group">
+                                                <input type="text" class="tpl-form-input" id="Y" name="Y"
+                                                       placeholder="Y"/>
+                                            </div>
+                                            <div class="am-form-group">
+                                                <input type="text" class="tpl-form-input" id="desc" name="desc"
+                                                       placeholder="描述"/>
+                                            </div>
+                                            <div class="am-form-group">
+                                                <input type="text" class="tpl-form-input" id="pic" name="pic"
+                                                       placeholder="图片"/>
+                                            </div>
+                                            <div class="am-form-group">
+                                                <button id="submit">提交</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
                             <div id="list" style="width: 100%;height:400px;"></div>
                         </div>
                     </div>
@@ -94,38 +134,51 @@
 
 <script>
     function updateGatewayList() {
-        $.getJSON("http://localhost:8080/api/gateways", function(json) {
+        $.getJSON("http://localhost:8080/api/gateways", function (json) {
             $("#gateway").empty();
-            json.forEach(function(e){
-                $("#gateway").append("<option value='"+e.id +"'> "+e.host+":"+e.port+"</option>");
+            json.forEach(function (e) {
+                $("#gateway").append("<option value='" + e.id + "'> " + e.host + ":" + e.port + "</option>");
             })
         });
     }
     $(document).ready(function () {
 
         updateGatewayList();
-       $("#query").click(function () {
+        $("#query").click(function () {
             var gateway = $("#gateway option:selected").val();
 
-           $.getJSON("http://localhost:8080/nodeInfoes/search/findByGatewayId?id=1", function (e) {
-               e._embedded.nodeInfoes.forEach( function (nodeinfo) {
-                  $("#list").append("<li>"+nodeinfo.)
-               })
-           });
+            $.getJSON("http://localhost:8080/nodeInfoes/search/findByGatewayId?id=1", function (e) {
+                e._embedded.nodeInfoes.forEach(function (nodeinfo) {
+                    //$("#list").append("<li>"+nodeinfo.)
+                })
+            });
         });
-       
-       $("#submit").click(function () {
-           var post_url = $("#new_node_info_form").attr("action");
-           $.ajax({
-               url: post_url,
-               type: 'post',
-               dataType: 'json',
-               data: $('form#new_node_info_form').serialize(),
-               success: function() {
-                   updateGatewayList();
-               }
-           });
-       })
+
+        $("#submit").click(function () {
+            var post_url = $("#new_node_info_form").attr("action");
+            $.ajax({
+                url: post_url,
+                type: 'post',
+                dataType: 'json',
+                data: $('form#new_node_info_form').serialize(),
+                success: function () {
+                    updateGatewayList();
+                }
+            });
+        })
+
+        // new button handler
+        $('#new-button').on('click', function () {
+            $('#doc-modal-1').modal({
+                relatedTarget: this,
+                onConfirm: function (e) {
+                    alert('你输入的是：' + e.data || '')
+                },
+                onCancel: function (e) {
+                    alert('不想说!');
+                }
+            });
+        });
 
 
     });

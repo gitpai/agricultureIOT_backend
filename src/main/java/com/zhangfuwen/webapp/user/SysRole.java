@@ -1,14 +1,12 @@
 package com.zhangfuwen.webapp.user;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 /**
  * Created by dean on 3/26/17.
  */
 @Entity
+@Table(name="sys_role")
 public class SysRole {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

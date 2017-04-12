@@ -1,3 +1,5 @@
+create database gateway;
+use gateway;
 create table sys_role(id int AUTO_INCREMENT PRIMARY KEY , name char(100));
 create table sys_user(id int AUTO_INCREMENT PRIMARY KEY , username char(100), password char(100));
 create table sys_user_roles(sys_user_id int, roles_id int);
@@ -9,12 +11,22 @@ insert  into `sys_user`(`id`,`password`,`username`) values (1,'root','root'),(2,
 
 insert  into `sys_user_roles`(`sys_user_id`,`roles_id`) values (1,1),(2,2);
 
-create table t_gateway(id int AUTO_INCREMENT PRIMARY KEY ,name char(250), ip char(20), port int, max_nodes int, max_channels int);
+create table t_gateway(id BIGINT(20) AUTO_INCREMENT PRIMARY KEY ,name char(250), ip char(20), port int, max_nodes int, max_channels int);
 insert into `t_gateway`(`name`,`ip`, `port`, `max_nodes`, `max_channels`) values ('gateway 1','192.168.1.1', 505, 64,32);
 insert into `t_gateway`(`name`,`ip`, `port`, `max_nodes`, `max_channels`) values ('gateway 2','192.168.1.2', 505, 64,32);
 insert into `t_gateway`(`name`,`ip`, `port`, `max_nodes`, `max_channels`) values ('gateway 3','192.168.1.3', 505, 64,32);
 insert into `t_gateway`(`name`,`ip`, `port`, `max_nodes`, `max_channels`) values ('gateway 4','192.168.1.4', 505, 64,32);
 insert into `t_gateway`(`name`,`ip`, `port`, `max_nodes`, `max_channels`) values ('gateway 5','192.168.1.5', 505, 64,32);
+
+
+alter table t_gateway add poll_interval int default 30;
+alter table t_gateway add  X FLOAT DEFAULT 0;
+ALTER TABLE t_gateway add Y FLOAT DEFAULT 0;
+ALTER TABLE t_gateway add desc_string char(250);
+ALTER TABLE t_gateway add pic char(250);
+
+#==============================
+
 
 alter table t_zigbee_node add gateway_id int(10) default '1';
 
@@ -26,11 +38,6 @@ alter table t_sensor add created datetime DEFAULT CURRENT_TIMESTAMP;
 update  t_sensor,t_zigbee_node set t_sensor.created=t_zigbee_node.created where t_sensor.readout_id=t_zigbee_node.id;
 
 
-alter table t_gateway add interval int default 30;
-alter table t_gateway add  X FLOAT DEFAULT 0;
-ALTER TABLE t_gateway add Y FLOAT DEFAULT 0;
-ALTER TABLE t_gateway add desc_string char(250);
-ALTER TABLE t_gateway add pic char(250);
 create table t_nodeinfo(id BIGINT(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,
                         gateway_id BIGINT(20),
                         node_addr TINYINT(3),
