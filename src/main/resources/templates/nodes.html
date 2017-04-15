@@ -70,7 +70,27 @@
                                     <tbody>
                                     <tr class="gradeX" th:each="node : ${nodes}">
                                         <td th:text="${node.nodeAddr}">Onions</td>
-                                        <td th:text="${node.nodeName}">test@test.com.cn</td>
+                                        <td >
+                                            <div th:if="${node.info != null}">
+                                                <span th:text="${node.info.nodeName}">节点名A</span>
+                                                <button class="toggle-detail am-btn am-btn-default">详情</button>
+                                                <div style="display:none;z-index: 2000;position:fixed;  ">
+                                                    <div class="widget-body am-fr">
+                                                        <ul class="am-list">
+                                                            <li th:text="'名称：'+${node.info.nodeName}"></li>
+                                                            <li th:text="'地址：'+${node.info.nodeAddr}"></li>
+                                                            <li th:text="'X  ：'+${node.info.X}"></li>
+                                                            <li th:text="'Y  ：'+${node.info.Y}"></li>
+                                                            <li th:text="'描述：'+${node.info.desc}"></li>
+                                                            <li th:text="'图片：'+${node.info.pic}"></li>
+                                                        </ul>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                            <div th:if="${node.info == null}">未定义</div>
+                                        </td>
+
                                         <td th:text="${node.created}"></td>
                                         <!--<td th:text="${node.coilOrSensors}"></td>-->
                                         <td>
@@ -109,6 +129,11 @@
 <script src="/assets/js/amazeui.datatables.min.js"></script>
 <script src="/assets/js/dataTables.responsive.min.js"></script>
 <script src="/assets/js/app.js"></script>
+<script>
+    $(".toggle-detail").click(function (e) {
+        $(this).next().toggle();
+    })
+</script>
 
 </body>
 

@@ -2,6 +2,7 @@ package com.zhangfuwen.webapp.sensors;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.zhangfuwen.collector.*;
+import com.zhangfuwen.info.NodeInfoRepository;
 import com.zhangfuwen.webapp.user.SysUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +35,9 @@ public class ZigbeeNodeController {
     ZigbeeNodeRepository zigbeeNodeRepository;
 
     @Autowired
+    NodeInfoRepository nodeInfoRepository;
+
+    @Autowired
     CoilOrSensorRepository coilOrSensorRepository;
 
     @Autowired
@@ -47,6 +51,7 @@ public class ZigbeeNodeController {
             List<ZigbeeNode> ns = zigbeeNodeRepository.findTop1ByNodeAddrAndGatewayOrderByIdDesc(i, gateway);
             if (!ns.isEmpty()) {
                 ZigbeeNode node = ns.get(0);
+                node.info = nodeInfoRepository.findTop1ByGatewayIdAndNodeAddr(gatewayid, node.getNodeAddr());
                 List<CoilOrSensor> sensors = coilOrSensorRepository.findAllByNode(node);
                 node.setCoilOrSensors(sensors);
                 logger.info(sensors.toString());

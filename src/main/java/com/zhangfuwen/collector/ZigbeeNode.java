@@ -1,5 +1,7 @@
 package com.zhangfuwen.collector;
 
+import com.zhangfuwen.info.NodeInfo;
+
 import javax.persistence.*;
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -27,9 +29,13 @@ public class ZigbeeNode {
     byte nodeAddr;
     /**
      * User-defined zigbee node name or description string
+     * deprecated
      */
     @Column(name = "node_name")
     String nodeName;
+
+    @Transient
+    public NodeInfo info;
     /**
      * Sensor Readouts
      */
