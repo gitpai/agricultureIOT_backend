@@ -107,6 +107,7 @@
                                                 <input type="text" class="tpl-form-input" id="Y" name="Y"
                                                        placeholder="Y"/>
                                             </div>
+                                            <div id="map"></div>
                                             <div class="am-form-group">
                                                 <input type="text" class="tpl-form-input" id="desc" name="desc"
                                                        placeholder="描述"/>
@@ -115,15 +116,31 @@
                                                 <input type="text" class="tpl-form-input" id="pic" name="pic"
                                                        placeholder="图片"/>
                                             </div>
-                                            <div class="am-form-group">
-                                                <button id="submit">提交</button>
+                                            <div class="am-modal-footer">
+                                                <span class="am-modal-btn" data-am-modal-cancel>取消</span>
+                                                <span class="am-modal-btn" data-am-modal-confirm>提交</span>
                                             </div>
                                         </form>
                                     </div>
                                 </div>
                             </div>
+                            <div id="doc-modal-2" class="am-modal am-modal-prompt" tabindex="-1">
+                                <div class="am-modal-dialog">
+                                    <div class="am-modal-hd">确认
+                                        <a href="javascript: void(0)" class="am-close am-close-spin"
+                                           data-am-modal-close>&times;</a>
+                                    </div>
+                                    <div class="am-modal-hd">是否真的删除？
+
+                                    </div>
+                                    <div class="am-modal-footer">
+                                        <span class="am-modal-btn" data-am-modal-cancel>取消</span>
+                                        <span class="am-modal-btn" data-am-modal-confirm>提交</span>
+                                    </div>
+                                </div>
+                            </div>
                             <div style="width: 100%;height:400px;">
-                                <table class="am-table am-table-compact am-table-striped tpl-table-black " >
+                                <table class="am-table am-table-compact am-table-striped tpl-table-black ">
                                     <thead>
                                     <th>网关id</th>
                                     <th>节点名称</th>
@@ -153,6 +170,7 @@
 <script src="/assets/js/amazeui.datatables.min.js"></script>
 <script src="/assets/js/dataTables.responsive.min.js"></script>
 <script src="/assets/js/app.js"></script>
+<script type="text/javascript" src="http://api.map.baidu.com/api?ak=XkOypNlmaEaTGHAiZmO5ga7EGudG6UrD&v=2.0&services=false"></script>
 
 <script>
     function updateGatewayList() {
@@ -163,49 +181,89 @@
             })
         });
     }
+    function showNodeInfo() {
+        $("#list").empty();
+        var gateway = $("#gateway option:selected").val();
+        console.log(gateway);
+
+        $.getJSON("http://localhost:8080/nodeInfoes/search/findByGatewayId?id=" + gateway, function (e) {
+            e._embedded.nodeInfoes.forEach(function (nodeinfo) {
+                $("#list").append("<tr class='gradeX'>" + "" +
+                    "<td>" + nodeinfo.gatewayId + "</td>" +
+                    "<td>" + nodeinfo.nodeName + "</td>" +
+                    "<td>" + nodeinfo.nodeAddr + "</td>" +
+                    "<td>" + nodeinfo.x + "</td>" +
+                    "<td>" + nodeinfo.y + "</td>" +
+                    "<td>" + nodeinfo.desc + "</td>" +
+                    "<td>" + nodeinfo.pic + "</td>" +
+                    "<td>" +
+                    "<a class='del'  onclick='deleteNodeInfo(this);' data-url='/webapp/delnodeinfo?gatewayid=" + nodeinfo.gatewayId + "&nodeaddr=" + nodeinfo.nodeAddr + "'>删除</a>" +
+                    "<a class='edit am-hide'  onclick='editNodeInfo(this);'>编辑</a>" +
+                    "</td>"
+                );
+            })
+        });
+    }
+
+    function editNodeInfo(e) {
+        $("#gatewayId").val($("#gateway").val());
+        $('#doc-modal-1').modal({
+            relatedTarget: this,
+            onConfirm: function (e) {
+                var post_url = $("#new_node_info_form").attr("action");
+                $.ajax({
+                    url: post_url,
+                    type: 'post',
+                    dataType: 'json',
+                    data: $('form#new_node_info_form').serialize(),
+                    success: function () {
+                        alert("提交成功")
+                    }
+                });
+                showNodeInfo();
+            },
+            onCancel: function (e) {
+
+            }
+        });
+    }
+    function deleteNodeInfo(e) {
+        var url = e.getAttribute("data-url");
+
+        $('#doc-modal-2').modal({
+            relatedTarget: this,
+            onConfirm: function (e) {
+                $.get(url);
+                showNodeInfo();
+            },
+            onCancel: function (e) {
+
+            }
+        });
+
+    }
+    function getAddr() {
+        var geolocation = new BMap.Geolocation();
+        var pt;
+        geolocation.getCurrentPosition(function (r) {
+            if (this.getStatus() == BMAP_STATUS_SUCCESS) {
+                //setCookie("localX", r.point.lng);
+                //setCookie("localY", r.point.lat);
+                alert(r.point.lng + " ， " + r.point.lat);
+                pt = r;
+                showPosition(pt);
+                //传参数给地图按钮
+                //document.getElementById("alinkMap").href += "&x="+r.point.lng+"&y="+r.point.lat;
+                //document.getElementById("alinkMap").style.display="block";
+            }
+        });
+    }
+
     $(document).ready(function () {
 
         updateGatewayList();
         $("#query").click(function () {
-            $("#list").empty();
-            var gateway = $("#gateway option:selected").val();
-            console.log(gateway);
-
-            $.getJSON("http://localhost:8080/nodeInfoes/search/findByGatewayId?id="+gateway, function (e) {
-                e._embedded.nodeInfoes.forEach(function (nodeinfo) {
-                    $("#list").append("<tr class='gradeX'>" + "" +
-                        "<td>" + nodeinfo.gatewayId + "</td>" +
-                        "<td>" + nodeinfo.nodeName + "</td>" +
-                        "<td>" + nodeinfo.nodeAddr + "</td>" +
-                        "<td>" + nodeinfo.x + "</td>" +
-                        "<td>" + nodeinfo.y + "</td>" +
-                        "<td>" + nodeinfo.desc + "</td>" +
-                        "<td>" + nodeinfo.pic + "</td>" +
-                        "<td><a class='del' href='/webapp/delnodeinfo?gatewayid=" + nodeinfo.gatewayId+"&nodeaddr=" + nodeinfo.nodeAddr + "'>删除</a></td>"
-                    );
-                })
-            });
-        });
-
-        $('form').bind('submit',function(e){e.preventDefault();});
-        $('.del').bind('click',function(e){e.preventDefault();});
-
-        $(".del").click(function (e) {
-            console.log(e);
-
-        });
-
-        $("#submit").click(function () {
-            var post_url = $("#new_node_info_form").attr("action");
-            $.ajax({
-                url: post_url,
-                type: 'post',
-                dataType: 'json',
-                data: $('form#new_node_info_form').serialize(),
-                success: function () {
-                    updateGatewayList();
-                }
-            });
+            showNodeInfo();
         });
 
         // new button handler
@@ -215,16 +273,111 @@
             $('#doc-modal-1').modal({
                 relatedTarget: this,
                 onConfirm: function (e) {
-                    alert('你输入的是：' + e.data || '')
+                    var post_url = $("#new_node_info_form").attr("action");
+                    $.ajax({
+                        url: post_url,
+                        type: 'post',
+                        dataType: 'json',
+                        data: $('form#new_node_info_form').serialize(),
+                        success: function () {
+                            alert("提交成功")
+                        }
+                    });
+                    showNodeInfo();
                 },
                 onCancel: function (e) {
-                    alert('不想说!');
+
                 }
             });
         });
 
 
     });
+
+    function getAddress() {
+        //创建Map地图实例
+        var map = new BMap.Map("allmap");
+        //设置中心点坐标
+        var point = new BMap.Point(116.331398, 39.897445);
+        //初始化地图
+        /**
+         *地图类型：
+         *普通地图：BMAP_NORMAL_MAP
+         *卫星地图：BMAP_HYBRID_MAP
+         */
+        var map = new BMap.Map("map", {mapType: BMap.BMAP_NORMAL_MAP, minZoom: 1, maxZoom: 18}); //设置地图类型及最小最大级别
+        //设置地图级别（1-18）
+        map.centerAndZoom(point, 12);
+        //开启滚轮缩放地图
+        map.enableScrollWheelZoom();
+        //进行浏览器定位
+        var geolocation = new BMap.Geolocation();
+        geolocation.getCurrentPosition(function (r) {
+            // 定位成功事件
+            if (this.getStatus() == BMAP_STATUS_SUCCESS) {
+                //alert('您的位置：'+r.point.lng+','+r.point.lat);
+                var point = new BMap.Point(r.point.lng, +r.point.lat);
+            }
+        }, {enableHighAccuracy: true});
+        //addEventListener--添加事件监听函数
+        //click--点击事件获取经纬度
+        map.addEventListener("click", function (e) {
+            prompt("鼠标单击地方的经纬度为：", e.point.lng + "," + e.point.lat);
+        });
+    }
+
+    /**
+     * 回调函数
+     */
+    function setCenter(result) {
+        var cityName = result.name;
+        //把地图设置当前城市
+        map.setCenter(cityName);
+    }
+    /**
+     * 设置覆盖物，获取坐标
+     * @param point
+     */
+    function setPoint(point) {
+        if (point) {
+            //坐标赋值
+            $('#lng').val(point.lng);
+            $('#lat').val(point.lat);
+            Geocoder(point);
+
+            map.centerAndZoom(point, 12);
+            var marker = new BMap.Marker(point);
+            map.addOverlay(marker);
+            marker.enableDragging();//可以拖动
+            //创建信息窗口
+            var infoWindow = new BMap.InfoWindow("这就是您公司的位置。<br/>如果不正确，请拖动红色图标");
+            //显示窗口
+            marker.openInfoWindow(infoWindow);
+            //点击监听
+            marker.addEventListener("click", function () {
+                this.openInfoWindow(infoWindow);
+            });
+            //拖动监听
+            marker.addEventListener("dragend", function (e) {
+                //坐标赋值
+                $('#lng').val(e.point.lng);
+                $('#lat').val(e.point.lat);
+                Geocoder(e.point);
+            });
+        }
+    }
+    /**
+     * 根据坐标获取地址
+     * @param point
+     * @constructor
+     */
+    function Geocoder(point) {
+        var gc = new BMap.Geocoder();
+        gc.getLocation(point, function (rs) {
+            var addComp = rs.addressComponents;
+            $('#address').val(addComp.province + ", " + addComp.city + ", " + addComp.district + ", " + addComp.street + ", " + addComp.streetNumber);
+        });
+    }
 </script>
 
 </body>
