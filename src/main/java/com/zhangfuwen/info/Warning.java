@@ -34,4 +34,60 @@ public class Warning {
 
     @Column(name="readout_id")
     Long readoutId;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getThresholdId() {
+        return thresholdId;
+    }
+
+    public void setThresholdId(Long thresholdId) {
+        this.thresholdId = thresholdId;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
+    public Timestamp getCreated() {
+        return created;
+    }
+
+    public void setCreated(Timestamp created) {
+        this.created = created;
+    }
+
+    public Timestamp getClosed() {
+        return closed;
+    }
+
+    public void setClosed(Timestamp closed) {
+        this.closed = closed;
+    }
+
+    public Long getReadoutId() {
+        return readoutId;
+    }
+
+    public void setReadoutId(Long readoutId) {
+        this.readoutId = readoutId;
+    }
 }
