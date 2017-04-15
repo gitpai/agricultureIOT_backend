@@ -64,10 +64,20 @@ public class GatewayController {
                       @ModelAttribute(name="ip") String ip,
                       @ModelAttribute(name = "port") int port,
                       @ModelAttribute(name="max_nodes") int max_nodes,
-                      @ModelAttribute(name="max_channels") int max_channels)
+                      @ModelAttribute(name="max_channels") int max_channels,
+                      @ModelAttribute(name="interval") int interval,
+                      @ModelAttribute(name="X") Float X,
+                      @ModelAttribute(name="Y") Float Y,
+                      @ModelAttribute(name="desc") String desc,
+                      @ModelAttribute(name="pic") String  pic)
     {
         Application.gatewayLock.lock();
         Gateway gateway = new Gateway(name,ip, port,max_nodes, max_channels, new HashMap<Byte,String>());
+        gateway.setInterval(interval);
+        gateway.setX(X);
+        gateway.setY(Y);
+        gateway.setDesc(desc);
+        gateway.setPic(pic);
         gatewayRepository.save(gateway);
         Application.gateways = null;
         Application.gatewayLock.unlock();

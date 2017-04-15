@@ -33,15 +33,15 @@ public class Gateway {
     int maxChannelsPerNode;
 
     @Column(name="poll_interval")
-    int interval;
+    public int interval;
     @Column(name="X")
-    float X;
+    public float X;
     @Column(name = "Y")
-    float Y;
+    public float Y;
     @Column(name="desc_string")
-    String desc;
+    public String desc;
     @Column(name="pic")
-    String pic;
+    public String pic;
 
     @OneToMany(targetEntity = ZigbeeNode.class,mappedBy = "gateway")
     List<ZigbeeNode> nodes;
@@ -294,14 +294,61 @@ public class Gateway {
         this.maxChannelsPerNode = maxChannelsPerNode;
     }
 
+    public int getInterval() {
+        return interval;
+    }
+
+    public void setInterval(int interval) {
+        this.interval = interval;
+    }
+
+    public float getX() {
+        return X;
+    }
+
+    public void setX(float x) {
+        X = x;
+    }
+
+    public float getY() {
+        return Y;
+    }
+
+    public void setY(float y) {
+        Y = y;
+    }
+
+    public String getDesc() {
+        return desc;
+    }
+
+    public void setDesc(String desc) {
+        this.desc = desc;
+    }
+
+    public String getPic() {
+        return pic;
+    }
+
+    public void setPic(String pic) {
+        this.pic = pic;
+    }
+
     @Override
     public String toString() {
         return "Gateway{" +
-                "name='" + name + '\'' +
+                "id=" + id +
+                ", name='" + name + '\'' +
                 ", host='" + host + '\'' +
                 ", port=" + port +
                 ", maxNodes=" + maxNodes +
                 ", maxChannelsPerNode=" + maxChannelsPerNode +
+                ", interval=" + interval +
+                ", X=" + X +
+                ", Y=" + Y +
+                ", desc='" + desc + '\'' +
+                ", pic='" + pic + '\'' +
+                ", nodes=" + nodes +
                 ", zigbeeNodeNames=" + zigbeeNodeNames +
                 '}';
     }

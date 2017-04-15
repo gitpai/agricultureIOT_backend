@@ -72,8 +72,13 @@
                                         <th>网关id</th>
                                         <th>网关名称</th>
                                         <th>网关地址</th>
-                                        <th>网关最大节点数</th>
-                                        <th>每节点最大通道数</th>
+                                        <th>节点数</th>
+                                        <th>通道数</th>
+                                        <th>轮询</th>
+                                        <th>X</th>
+                                        <th>Y</th>
+                                        <th>描述</th>
+                                        <th>图片</th>
                                         <th>管理</th>
                                     </thead>
                                     <tbody>
@@ -83,6 +88,11 @@
                                         <td th:text="|${gateway.host}:${gateway.port}|">test@test.com.cn</td>
                                         <td th:text="${gateway.maxNodes}"></td>
                                         <td th:text="${gateway.maxChannelsPerNode}"></td>
+                                        <td th:text="${gateway.interval}"></td>
+                                        <td th:text="${gateway.X}"></td>
+                                        <td th:text="${gateway.Y}"></td>
+                                        <td th:text="${gateway.desc}"></td>
+                                        <td th:text="${gateway.pic}"></td>
                                         <td>
                                             <a class="am-btn am-btn-default"
                                                th:href="@{/webapp/nodes(gatewayid=${gateway.id})}"
