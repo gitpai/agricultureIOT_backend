@@ -120,21 +120,15 @@ public class ThresholdController {
             @ModelAttribute("thresholdInfoForm") ThresholdInfo thresholdInfoForm,
             BindingResult bindingResult,
             final RedirectAttributes redirectAttributes
-    ) {
+    )
+    {
         logger.info(thresholdInfoForm.toString());
         //验证
         ThesholdInfoValidator validator = new ThesholdInfoValidator();
         validator.validate(thresholdInfoForm,bindingResult);
         if(bindingResult.hasErrors()) {
-            List<ObjectError>  list = bindingResult.getAllErrors();
-
-            for(ObjectError  error:list){
-                for(String s : bindingResult.resolveMessageCodes("thresholdinfo.empty.channel")){
-                    System.out.println(s);
-                }
-                logger.info(error.getCode()+"---"+error.getArguments()+"---"+error.getDefaultMessage() );
-
-            }
+            Iterable<Gateway> gateways = gatewayRepository.findAll();
+            model.addAttribute("gateways", gateways);
             model.addAttribute("thesholdInfoForm", thresholdInfoForm);
             return "threshold-add";
         }
