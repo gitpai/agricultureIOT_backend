@@ -127,8 +127,8 @@
         var url = "/api/threshold?gatewayid=" + gateway;
         jQuery.getJSON(url, function (dataJson) {
             $("#list").empty();
+            console.log(dataJson);
             dataJson.forEach(function (e) {
-
                 $("#list").append("<tr class='gradeX'>" + "" +
                     "<td>" + e.id + "</td>" +
                     "<td>" + e.gatewayId + "</td>" +
@@ -158,8 +158,9 @@
         $('#doc-modal-2').modal({
             relatedTarget: this,
             onConfirm: function (e) {
-                $.get(url);
-                showList();
+                $.get(url, function(){
+                    showList();
+                });
             },
             onCancel: function (e) {
 
