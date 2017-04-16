@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zhangfuwen.collector.Gateway;
 import com.zhangfuwen.collector.GatewayRepository;
 import com.zhangfuwen.info.NodeInfo;
+import com.zhangfuwen.info.ThesholdInfoValidator;
 import com.zhangfuwen.info.ThresholdInfo;
 import com.zhangfuwen.info.ThresholdInfoRepository;
 import org.slf4j.Logger;
@@ -12,6 +13,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -101,19 +104,40 @@ public class ThresholdController {
     }
 
     @RequestMapping(value = "/webapp/threshold/add", method = RequestMethod.GET)
-    String thresholdAddForm(Model model) {
+    String thresholdAddForm(Model model,
+                            @ModelAttribute("thresholdInfoForm") ThresholdInfo thresholdInfoForm,
+                            BindingResult bindingResult)
+    {
         Iterable<Gateway> gateways = gatewayRepository.findAll();
         model.addAttribute("gateways", gateways);
+        //model.addAttribute("thesholdInfoForm", thresholdInfoForm);
         return "threshold-add";
     }
 
     @RequestMapping(value = "/webapp/threshold/add", method = RequestMethod.POST)
     String thresholdAdd(
             Model model,
-            @ModelAttribute("thesholdInfoForm") ThresholdInfo thresholdInfoForm,
+            @ModelAttribute("thresholdInfoForm") ThresholdInfo thresholdInfoForm,
+            BindingResult bindingResult,
             final RedirectAttributes redirectAttributes
     ) {
         logger.info(thresholdInfoForm.toString());
+        //验证
+        ThesholdInfoValidator validator = new ThesholdInfoValidator();
+        validator.validate(thresholdInfoForm,bindingResult);
+        if(bindingResult.hasErrors()) {
+            List<ObjectError>  list = bindingResult.getAllErrors();
+
+            for(ObjectError  error:list){
+                for(String s : bindingResult.resolveMessageCodes("thresholdinfo.empty.channel")){
+                    System.out.println(s);
+                }
+                logger.info(error.getCode()+"---"+error.getArguments()+"---"+error.getDefaultMessage() );
+
+            }
+            model.addAttribute("thesholdInfoForm", thresholdInfoForm);
+            return "threshold-add";
+        }
         ThresholdInfo oldInfo = thresholdInfoRepository.findOneByGatewayIdAndNodeAddrAndChannel(thresholdInfoForm.getGatewayId(),
                 thresholdInfoForm.getNodeAddr(), thresholdInfoForm.getChannel());
         if (oldInfo != null) {
