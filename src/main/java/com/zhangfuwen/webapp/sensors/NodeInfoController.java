@@ -51,7 +51,7 @@ public class NodeInfoController {
 
     @RequestMapping(value = "/webapp/nodeinfo/add", method = RequestMethod.POST)
     public ResponseEntity<String> addNodeInfo(Model model, @ModelAttribute("nodeInfoFrom") NodeInfo nodeInfoFrom) {
-        Byte addr = nodeInfoFrom.getNodeAddr();
+        logger.info(nodeInfoFrom.toString());
         NodeInfo info = nodeInfoRepository.findTop1ByGatewayIdAndNodeAddr(nodeInfoFrom.getGatewayId(), nodeInfoFrom.getNodeAddr());
         if(info==null){
             nodeInfoRepository.save(nodeInfoFrom);

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>添加告警阈值</title>
+    <meta name="description" content="添加告警阈值">
+    <meta name="keywords" content="index">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <link rel="icon" type="image/png" href="/assets/i/favicon.png">
+    <link rel="apple-touch-icon-precomposed" href="/assets/i/app-icon72x72@2x.png">
+    <meta name="apple-mobile-web-app-title" content="Amaze UI" />
+    <link rel="stylesheet" href="/assets/css/amazeui.min.css" />
+    <link rel="stylesheet" href="/assets/css/amazeui.datatables.min.css" />
+    <link rel="stylesheet" href="/assets/css/app.css">
+    <script src="/assets/js/jquery.min.js"></script>
+
+</head>
+
+<body data-type="login">
+<script src="/assets/js/theme.js"></script>
+<div class="am-g tpl-g">
+    <!-- 风格切换 -->
+    <div class="tpl-skiner">
+        <div class="tpl-skiner-toggle am-icon-cog">
+        </div>
+        <div class="tpl-skiner-content">
+            <div class="tpl-skiner-content-title">
+                选择主题
+            </div>
+            <div class="tpl-skiner-content-bar">
+                <span class="skiner-color skiner-white" data-color="theme-white"></span>
+                <span class="skiner-color skiner-black" data-color="theme-black"></span>
+            </div>
+        </div>
+    </div>
+    <div class="tpl-login">
+        <div class="tpl-login-content">
+            <div class="tpl-login-title">添加告警阈值</div>
+
+            <form class="am-form tpl-form-line-form" method="POST" action="/webapp/threshold/add">
+                <span th:text="${error}"></span>
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                <div class="am-form-group">
+                    <label for="gateway" class="am-form-label">选择网关</label>
+                    <select name="gatewayId" id="gateway">
+                        <option th:each="gateway : ${gateways}" th:value="${gateway.id}"
+                        th:text="|${gateway.host}:${gateway.port}|"></option>
+                    </select>
+                </div>
+                <div class="am-form-group">
+                    <label for="node" class="am-form-label">选择节点</label>
+                    <select name="nodeAddr" id="node">
+                        <option th:each="node :${#numbers.sequence( 1, 64)}" th:value="${node}"
+                                th:text="${node}"></option>
+                    </select>
+                </div>
+
+                <div class="am-form-group">
+                    <label for="channel" class="am-form-label">选择通道</label>
+                    <select name="channel" id="channel">
+                        <option th:each="chan :${#numbers.sequence( 0, 31)}" th:value="${chan}"
+                                th:text="${chan}"></option>
+                    </select>
+                </div>
+
+                <div class="am-form-group">
+                    <input type="text" name="upperLimit" class="tpl-form-input" id="upper-limit" placeholder="告警上限">
+                </div>
+
+                <div class="am-form-group">
+                    <input type="text" name="lowerLimit" class="tpl-form-input" id="lower-limit" placeholder="告警下限">
+                </div>
+
+                <div class="am-form-group">
+                    <button type="submit" class="am-btn am-btn-primary  am-btn-block tpl-btn-bg-color-success  tpl-login-btn">提交</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script src="/assets/js/amazeui.min.js"></script>
+<script src="/assets/js/app.js"></script>
+
+</body>
+
+</html>

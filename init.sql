@@ -33,6 +33,15 @@ create table t_nodeinfo(id BIGINT(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,
                         desc_string char(250),
                         pic char(250));
 
+CREATE TABLE `t_thresholdinfo` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `channel` tinyint(4) NOT NULL,
+  `gateway_id` bigint(20) NOT NULL,
+  `lower_limit` FLOAT DEFAULT  0,
+  `node_addr` tinyint(4) NOT NULL,
+  `upper_limit` FLOAT DEFAULT 0
+);
+
 #==============================
 
 

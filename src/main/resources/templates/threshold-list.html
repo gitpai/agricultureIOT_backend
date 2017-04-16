@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>告警阈值列表</title>
+    <meta name="description" content="告警阈值列表">
+    <meta name="keywords" content="index">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <link rel="icon" type="image/png" href="/assets/i/favicon.png">
+    <link rel="apple-touch-icon-precomposed" href="/assets/i/app-icon72x72@2x.png">
+    <meta name="apple-mobile-web-app-title" content="Amaze UI"/>
+    <script src="/assets/js/echarts.min.js"></script>
+    <link rel="stylesheet" href="/assets/css/amazeui.min.css"/>
+    <link rel="stylesheet" href="/assets/css/amazeui.datatables.min.css"/>
+    <link rel="stylesheet" href="/assets/css/app.css">
+    <script src="/assets/js/jquery.min.js"></script>
+
+</head>
+
+<body data-type="widgets">
+<script src="/assets/js/theme.js"></script>
+<div class="am-g tpl-g">
+    <div th:include="header::header"></div>
+    <!-- 风格切换 -->
+    <div class="tpl-skiner">
+        <div class="tpl-skiner-toggle am-icon-cog">
+        </div>
+        <div class="tpl-skiner-content">
+            <div class="tpl-skiner-content-title">
+                选择主题
+            </div>
+            <div class="tpl-skiner-content-bar">
+                <span class="skiner-color skiner-white" data-color="theme-white"></span>
+                <span class="skiner-color skiner-black" data-color="theme-black"></span>
+            </div>
+        </div>
+    </div>
+    <!-- 侧边导航栏 -->
+    <div th:include="sidebar"></div>
+
+
+    <!-- 内容区域 -->
+    <div class="tpl-content-wrapper">
+        <div class="row-content am-cf">
+            <div class="row">
+                <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
+                    <div class="widget am-cf">
+                        <div class="widget-head am-cf">
+                            <div class="widget-title  am-cf">告警阈值列表</div>
+
+
+                        </div>
+                        <div class="widget-body  am-fr">
+                            <a sec:authorize="hasRole('ROLE_ADMIN')" class="am-btn am-btn-default"
+                               href="/webapp/threshold/add"
+                            >添加阈值
+                            </a>
+                            <a sec:authorize="hasRole('ROLE_CREATOR')" class="am-btn am-btn-default"
+                               href="/webapp/threshold/add"
+                            >添加阈值
+                            </a>
+
+                            <div class="am-form-group">
+                                <label for="gateway" class="am-form-label">选择网关</label>
+                                <select name="gateway" id="gateway">
+                                    <option th:each="gateway : ${gateways}" th:value="${gateway.id}"
+                                            th:text="|${gateway.host}:${gateway.port}|"></option>
+                                </select>
+                                <button type="button" id="query">查询</button>
+                            </div>
+                            <!--用户列表-->
+                            <div class="am-u-sm-12">
+                                <table width="100%" class="am-table am-table-compact am-table-striped tpl-table-black "
+                                       id="example-r">
+                                    <thead>
+                                    <tr>
+                                        <th>id</th>
+                                        <th>网关</th>
+                                        <th>节点</th>
+                                        <th>通道</th>
+                                        <th>上限</th>
+                                        <th>下限</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="list">
+                                    <!-- more data -->
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <!--删除确认对话框-->
+                            <div id="doc-modal-2" class="am-modal am-modal-prompt" tabindex="-1">
+                                <div class="am-modal-dialog">
+                                    <div class="am-modal-hd">确认
+                                        <a href="javascript: void(0)" class="am-close am-close-spin"
+                                           data-am-modal-close>&times;</a>
+                                    </div>
+                                    <div class="am-modal-hd">是否真的删除？
+
+                                    </div>
+                                    <div class="am-modal-footer">
+                                        <span class="am-modal-btn" data-am-modal-cancel>取消</span>
+                                        <span class="am-modal-btn" data-am-modal-confirm>提交</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<script src="/assets/js/amazeui.min.js"></script>
+<script src="/assets/js/amazeui.datatables.min.js"></script>
+<script src="/assets/js/dataTables.responsive.min.js"></script>
+<script src="/assets/js/app.js"></script>
+<script>
+    function showList() {
+        var gateway = $("#gateway option:selected").val();
+
+        var url = "/api/threshold?gatewayid=" + gateway;
+        jQuery.getJSON(url, function (dataJson) {
+            $("#list").empty();
+            dataJson.forEach(function (e) {
+
+                $("#list").append("<tr class='gradeX'>" + "" +
+                    "<td>" + e.id + "</td>" +
+                    "<td>" + e.gatewayId + "</td>" +
+                    "<td>" + e.nodeAddr + "</td>" +
+                    "<td>" + e.channel + "</td>" +
+                    "<td>" + e.upperLimit + "</td>" +
+                    "<td>" + e.lowerLimit + "</td>" +
+                    "<td>" +
+                    "<a class='del'  onclick='deleteNodeInfo(this);' data-url='/api/threshold/del?id="
+                        + e.id +"'>删除</a>" +
+                    "</td>"
+                );
+            });
+        });
+    }
+    $(document).ready(
+        function () {
+            $("#query").click(function () {
+                showList();
+            })
+        }
+    );
+
+    function deleteNodeInfo(e) {
+        var url = e.getAttribute("data-url");
+
+        $('#doc-modal-2').modal({
+            relatedTarget: this,
+            onConfirm: function (e) {
+                $.get(url);
+                showList();
+            },
+            onCancel: function (e) {
+
+            }
+        });
+
+    }
+
+</script>
+
+</body>
+
+</html>

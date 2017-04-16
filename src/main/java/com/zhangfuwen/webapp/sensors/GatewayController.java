@@ -88,8 +88,12 @@ public class GatewayController {
     }
 
     @RequestMapping(value = "/webapp/gateways/delete", method = RequestMethod.GET)
-    public String delete(Model model, @ModelAttribute(name="gatewayid") Long gatewayid, HttpServletRequest request,
-                         final RedirectAttributes redirectAttributes) {
+    public String delete(
+            Model model,
+            @ModelAttribute(name="gatewayid") Long gatewayid,
+            HttpServletRequest request,
+            final RedirectAttributes redirectAttributes)
+    {
         Gateway gateway = gatewayRepository.findOne(gatewayid);
         if(gateway==null) {
             String referer = "/webapp/gateways";
