@@ -7,7 +7,14 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
+
+import com.zhangfuwen.info.ThresholdInfo;
+import com.zhangfuwen.info.ThresholdInfoRepository;
+import com.zhangfuwen.info.Warning;
 import com.zhangfuwen.utils.Utils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Created by dean on 2017/3/17.
@@ -15,6 +22,7 @@ import com.zhangfuwen.utils.Utils;
 @Entity
 @Table(name="t_sensor")
 public class CoilOrSensor {
+    private static final Logger logger = LoggerFactory.getLogger(CoilOrSensor.class);
     public static Map<Byte,String> sensorTypeMap = new HashMap<Byte,String>();
 
     static {
@@ -48,7 +56,33 @@ public class CoilOrSensor {
     @JoinColumn(name="id")
     ZigbeeNode node;
 
+    @Transient
+    @Autowired
+    ThresholdInfoRepository thresholdInfoRepository;
+
     public CoilOrSensor(){}
+
+
+    public void persist(EntityManager entityManager) {
+        persistHook(entityManager);
+        entityManager.persist(this);
+    }
+
+    public void persistHook(EntityManager entityManager) {
+        ThresholdInfo info = thresholdInfoRepository.findOneByGatewayIdAndNodeAddrAndChannel(this.gatewayId, this.nodeAddr,this.channel);
+        if(info!=null) {
+            logger.info("got threshold info "+info.toString());
+            logger.info("sensor is "+ this.toString());
+        }
+        Float value = Float.valueOf(this.getRealValue());
+        if(value > info.getUpperLimit() ) {
+            Warning w = new Warning(info.getId(), Warning.WARN_TYPE_UPPER_LIMIT, Warning.WARN_STATUS_NEW,this.getId());
+            entityManager.persist(w);
+        }else if(value < info.getLowerLimit()) {
+            Warning w = new Warning(info.getId(), Warning.WARN_TYPE_LOWER_LIMIT, Warning.WARN_STATUS_NEW,this.getId());
+            entityManager.persist(w);
+        }
+    }
 
     public CoilOrSensor(ZigbeeNode node,byte channel, byte[] data) throws IOException {
         this.node = node;

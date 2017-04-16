@@ -152,7 +152,7 @@ public class ZigbeeNode {
         this.coilOrSensors.forEach(coilOrSensor -> {
             coilOrSensor.created = new Timestamp(persistDate.getTime());
             if(coilOrSensor.getSensorType()!=0) {// this channel report no data
-                entityManager.persist(coilOrSensor);
+                coilOrSensor.persist(entityManager);
             }
         });
         entityManager.getTransaction().commit();

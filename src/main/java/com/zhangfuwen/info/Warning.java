@@ -35,6 +35,14 @@ public class Warning {
     @Column(name="readout_id")
     Long readoutId;
 
+    public Warning(Long thresholdId, int type, int status, Long readoutId) {
+        this.thresholdId = thresholdId;
+        this.type = type;
+        this.status = status;
+        this.created = this.getCreated();
+        this.readoutId = readoutId;
+    }
+
     public Long getId() {
         return id;
     }
