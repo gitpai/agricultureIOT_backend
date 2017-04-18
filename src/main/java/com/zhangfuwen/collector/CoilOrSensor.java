@@ -2,6 +2,7 @@ package com.zhangfuwen.collector;
 
 import javax.persistence.*;
 import java.io.IOException;
+import java.io.Serializable;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -11,10 +12,16 @@ import java.util.Map;
 import com.zhangfuwen.info.ThresholdInfo;
 import com.zhangfuwen.info.ThresholdInfoRepository;
 import com.zhangfuwen.info.Warning;
+import com.zhangfuwen.info.WarningRepository;
 import com.zhangfuwen.utils.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
+import org.springframework.data.repository.core.EntityInformation;
+import org.springframework.data.repository.core.RepositoryInformation;
+import org.springframework.data.repository.core.RepositoryMetadata;
+import org.springframework.data.repository.core.support.RepositoryFactorySupport;
 
 /**
  * Created by dean on 2017/3/17.
@@ -63,12 +70,10 @@ public class CoilOrSensor {
     public CoilOrSensor(){}
 
 
-    public void persist(EntityManager entityManager) {
-        persistHook(entityManager);
-        entityManager.persist(this);
-    }
 
-    public void persistHook(EntityManager entityManager) {
+    public void persistHook(ThresholdInfoRepository thresholdInfoRepository,
+                            WarningRepository warningRepository)
+    {
         ThresholdInfo info = thresholdInfoRepository.findOneByGatewayIdAndNodeAddrAndChannel(this.gatewayId, this.nodeAddr,this.channel);
         if(info!=null) {
             logger.info("got threshold info "+info.toString());
@@ -77,10 +82,10 @@ public class CoilOrSensor {
         Float value = Float.valueOf(this.getRealValue());
         if(value > info.getUpperLimit() ) {
             Warning w = new Warning(info.getId(), Warning.WARN_TYPE_UPPER_LIMIT, Warning.WARN_STATUS_NEW,this.getId());
-            entityManager.persist(w);
+            warningRepository.save(w);
         }else if(value < info.getLowerLimit()) {
             Warning w = new Warning(info.getId(), Warning.WARN_TYPE_LOWER_LIMIT, Warning.WARN_STATUS_NEW,this.getId());
-            entityManager.persist(w);
+            warningRepository.save(w);
         }
     }
 

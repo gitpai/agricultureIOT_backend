@@ -1,5 +1,7 @@
 package com.zhangfuwen.collector;
 
+import com.zhangfuwen.info.ThresholdInfoRepository;
+import com.zhangfuwen.info.WarningRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.zhangfuwen.utils.Utils;
@@ -109,7 +111,13 @@ public class Gateway {
         }
     }
 
-    public void collectAndPersist(boolean dummy, EntityManager entityManager) throws IOException {
+    public void collectAndPersist(boolean dummy,
+                                  ZigbeeNodeRepository zigbeeNodeRepository,
+                                  CoilOrSensorRepository coilOrSensorRepository,
+                                  ThresholdInfoRepository thresholdInfoRepository,
+                                  WarningRepository warningRepository
+                                  ) throws IOException
+    {
         byte[] online;
         if (dummy) {
             online = new byte[]{0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, (byte) 0x80};
@@ -143,7 +151,7 @@ public class Gateway {
 
                 if (zigbeeNode.valid) {
                     logger.info(String.format("readout collected, " + zigbeeNode.toString()));
-                    zigbeeNode.persist(entityManager);
+                    zigbeeNode.persist(zigbeeNodeRepository, coilOrSensorRepository, thresholdInfoRepository, warningRepository);
                 } else {
                     logger.error("readout collection failure, " + zigbeeNode.toString());
                 }

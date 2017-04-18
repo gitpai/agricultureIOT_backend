@@ -1,6 +1,8 @@
 package com.zhangfuwen.collector;
 
 import com.zhangfuwen.info.NodeInfo;
+import com.zhangfuwen.info.ThresholdInfoRepository;
+import com.zhangfuwen.info.WarningRepository;
 
 import javax.persistence.*;
 import java.io.DataInputStream;
@@ -139,24 +141,22 @@ public class ZigbeeNode {
 
     /**
      * write data to database
-     *
-     * @param entityManager ready configured entity manager
-     * @throws IOException
      */
-    void persist(EntityManager entityManager) throws IOException {
+    void persist(ZigbeeNodeRepository zigbeeNodeRepository,
+                 CoilOrSensorRepository coilOrSensorRepository,
+                 ThresholdInfoRepository thresholdInfoRepository,
+                 WarningRepository warningRepository) throws IOException
+    {
         Date persistDate = new Date();
         //System.out.println("collecting "+Integer.toHexString(this.getNodeAddr()));
         this.created = persistDate;
-        entityManager.getTransaction().begin();
-        entityManager.persist(this);
         this.coilOrSensors.forEach(coilOrSensor -> {
             coilOrSensor.created = new Timestamp(persistDate.getTime());
             if(coilOrSensor.getSensorType()!=0) {// this channel report no data
-                coilOrSensor.persist(entityManager);
+                coilOrSensorRepository.save(coilOrSensor);
+                coilOrSensor.persistHook(thresholdInfoRepository, warningRepository);
             }
         });
-        entityManager.getTransaction().commit();
-        //System.out.println("done");
     }
 
     /**

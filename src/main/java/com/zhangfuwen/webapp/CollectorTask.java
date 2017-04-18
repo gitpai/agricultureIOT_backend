@@ -1,0 +1,73 @@
+package com.zhangfuwen.webapp;
+
+import com.zhangfuwen.collector.*;
+import com.zhangfuwen.info.ThresholdInfoRepository;
+import com.zhangfuwen.info.WarningRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
+/**
+ * Created by dean on 4/18/17.
+ */
+@Component
+public class CollectorTask {
+    public static Config config;
+    //该值置空时即重新从数据库读取列表
+    public static Iterable<Gateway> gateways=null;
+    public static Lock gatewayLock;
+    static {
+        gatewayLock = new ReentrantLock();
+        config = Config.getInstance();
+    }
+
+    @Autowired
+    ThresholdInfoRepository thresholdInfoRepository;
+
+    @Autowired
+    GatewayRepository gatewayRepository;
+
+    @Autowired
+    ZigbeeNodeRepository zigbeeNodeRepository;
+    @Autowired
+    CoilOrSensorRepository coilOrSensorRepository;
+
+    @Autowired
+    WarningRepository warningRepository;
+
+    @Scheduled(fixedRate = 5000)
+    public void updateSensor() {
+        gatewayLock.lock();
+        if(gateways==null) {
+            gateways = gatewayRepository.findAll();
+        }
+        for (Gateway gateway : gateways) {
+            if (!config.isDevMode()) {
+                try {
+                    gateway.init();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    continue;
+                }
+            }
+
+            //System.out.println("scheduled to collect at " + new Date());
+            try {
+                gateway.collectAndPersist(config.isDevMode(),
+                        zigbeeNodeRepository,
+                        coilOrSensorRepository,
+                        thresholdInfoRepository,
+                        warningRepository);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+        gatewayLock.unlock();
+    }
+}

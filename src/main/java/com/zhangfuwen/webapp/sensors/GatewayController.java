@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zhangfuwen.Application;
 import com.zhangfuwen.collector.Gateway;
 import com.zhangfuwen.collector.GatewayRepository;
+import com.zhangfuwen.webapp.CollectorTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,7 +72,7 @@ public class GatewayController {
                       @ModelAttribute(name="desc") String desc,
                       @ModelAttribute(name="pic") String  pic)
     {
-        Application.gatewayLock.lock();
+        CollectorTask.gatewayLock.lock();
         Gateway gateway = new Gateway(name,ip, port,max_nodes, max_channels, new HashMap<Byte,String>());
         gateway.setInterval(interval);
         gateway.setX(X);
@@ -79,8 +80,8 @@ public class GatewayController {
         gateway.setDesc(desc);
         gateway.setPic(pic);
         gatewayRepository.save(gateway);
-        Application.gateways = null;
-        Application.gatewayLock.unlock();
+        CollectorTask.gateways = null;
+        CollectorTask.gatewayLock.unlock();
         String referer = "/webapp/gateways";
         redirectAttributes.addFlashAttribute("message", "添加成功");
         redirectAttributes.addFlashAttribute("referer", referer);
@@ -102,10 +103,10 @@ public class GatewayController {
             return "redirect:/flash";
         }
 
-        Application.gatewayLock.lock();
+        CollectorTask.gatewayLock.lock();
         gatewayRepository.delete(gatewayid);
-        Application.gateways = null;
-        Application.gatewayLock.unlock();
+        CollectorTask.gateways = null;
+        CollectorTask.gatewayLock.unlock();
         String referer = "/webapp/gateways";
         redirectAttributes.addFlashAttribute("message", "删除成功");
         redirectAttributes.addFlashAttribute("referer", referer);
