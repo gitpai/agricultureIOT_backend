@@ -29,7 +29,7 @@
         </encoder>
     </appender>
 
-    <logger name="com.zhangfuwen.collector.Gateway" level="error"
+    <logger name="com.zhangfuwen.collector.Gateway" level="info"
             additivity="false">
         <appender-ref ref="STDOUT" />
     </logger>
@@ -37,8 +37,8 @@
         <appender-ref ref="STDOUT" />
     </root>
 
-    <!--<root level="info">-->
-        <!--<appender-ref ref="FILE-AUDIT" />-->
-    <!--</root>-->
+    <root level="info">
+        <appender-ref ref="FILE-AUDIT" />
+    </root>
 
 </configuration>

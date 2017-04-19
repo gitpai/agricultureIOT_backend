@@ -1,7 +1,10 @@
 package com.zhangfuwen.info;
 
+import com.zhangfuwen.collector.CoilOrSensor;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.Date;
 
 /**
  * Created by dean on 4/8/17.
@@ -35,11 +38,19 @@ public class Warning {
     @Column(name="readout_id")
     Long readoutId;
 
+    @Transient
+    public CoilOrSensor readout;
+
+    @Transient
+    public ThresholdInfo thresholdInfo;
+
+    public Warning(){}
+
     public Warning(Long thresholdId, int type, int status, Long readoutId) {
         this.thresholdId = thresholdId;
         this.type = type;
         this.status = status;
-        this.created = this.getCreated();
+        this.created =  new Timestamp(new Date().getTime());;
         this.readoutId = readoutId;
     }
 

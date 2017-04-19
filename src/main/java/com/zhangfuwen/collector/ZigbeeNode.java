@@ -150,6 +150,7 @@ public class ZigbeeNode {
         Date persistDate = new Date();
         //System.out.println("collecting "+Integer.toHexString(this.getNodeAddr()));
         this.created = persistDate;
+        zigbeeNodeRepository.save(this);
         this.coilOrSensors.forEach(coilOrSensor -> {
             coilOrSensor.created = new Timestamp(persistDate.getTime());
             if(coilOrSensor.getSensorType()!=0) {// this channel report no data

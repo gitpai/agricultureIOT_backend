@@ -2,10 +2,9 @@ package com.zhangfuwen.webapp.sensors;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.zhangfuwen.Application;
 import com.zhangfuwen.collector.Gateway;
 import com.zhangfuwen.collector.GatewayRepository;
-import com.zhangfuwen.webapp.CollectorTask;
+import com.zhangfuwen.CollectorTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +19,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * Created by dean on 4/3/17.

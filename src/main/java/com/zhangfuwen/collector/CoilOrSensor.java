@@ -27,10 +27,10 @@ import org.springframework.data.repository.core.support.RepositoryFactorySupport
  * Created by dean on 2017/3/17.
  */ //开关量或传感器
 @Entity
-@Table(name="t_sensor")
+@Table(name = "t_sensor")
 public class CoilOrSensor {
     private static final Logger logger = LoggerFactory.getLogger(CoilOrSensor.class);
-    public static Map<Byte,String> sensorTypeMap = new HashMap<Byte,String>();
+    public static Map<Byte, String> sensorTypeMap = new HashMap<Byte, String>();
 
     static {
         //TODO: table not complete
@@ -39,64 +39,65 @@ public class CoilOrSensor {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="readout_id")
+    @Column(name = "readout_id")
     Long id;
-    @Column(name="channel")
+    @Column(name = "channel")
     byte channel;
-    @Column(name="sensor_type")
+    @Column(name = "sensor_type")
     byte sensorType;
-    @Column(name="data_type")
+    @Column(name = "data_type")
     byte dataType;
-    @Column(name="value")
+    @Column(name = "value")
     short value;
 
-    @Column(name="node_addr")
+    @Column(name = "node_addr")
     public byte nodeAddr;
 
-    @Column(name="gateway_id")
+    @Column(name = "gateway_id")
     public Long gatewayId;
 
-    @Column(name="created")
+    @Column(name = "created")
     public Timestamp created;
 
-    @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id")
     ZigbeeNode node;
 
     @Transient
     @Autowired
     ThresholdInfoRepository thresholdInfoRepository;
 
-    public CoilOrSensor(){}
-
+    public CoilOrSensor() {
+    }
 
 
     public void persistHook(ThresholdInfoRepository thresholdInfoRepository,
-                            WarningRepository warningRepository)
-    {
-        ThresholdInfo info = thresholdInfoRepository.findOneByGatewayIdAndNodeAddrAndChannel(this.gatewayId, this.nodeAddr,this.channel);
-        if(info!=null) {
-            logger.info("got threshold info "+info.toString());
-            logger.info("sensor is "+ this.toString());
-        }
-        Float value = Float.valueOf(this.getRealValue());
-        if(value > info.getUpperLimit() ) {
-            Warning w = new Warning(info.getId(), Warning.WARN_TYPE_UPPER_LIMIT, Warning.WARN_STATUS_NEW,this.getId());
-            warningRepository.save(w);
-        }else if(value < info.getLowerLimit()) {
-            Warning w = new Warning(info.getId(), Warning.WARN_TYPE_LOWER_LIMIT, Warning.WARN_STATUS_NEW,this.getId());
-            warningRepository.save(w);
+                            WarningRepository warningRepository) {
+        ThresholdInfo info = thresholdInfoRepository.findOneByGatewayIdAndNodeAddrAndChannel(this.gatewayId, this.nodeAddr, this.channel);
+        if (info != null) {
+            logger.info("got threshold info " + info.toString());
+            logger.info("sensor is " + this.toString());
+
+            Float value = Float.valueOf(this.getRealValue());
+            if (value > info.getUpperLimit()) {
+                Warning w = new Warning(info.getId(), Warning.WARN_TYPE_UPPER_LIMIT, Warning.WARN_STATUS_NEW, this.getId());
+                warningRepository.save(w);
+            } else if (value < info.getLowerLimit()) {
+                Warning w = new Warning(info.getId(), Warning.WARN_TYPE_LOWER_LIMIT, Warning.WARN_STATUS_NEW, this.getId());
+                warningRepository.save(w);
+            }
+
         }
     }
 
-    public CoilOrSensor(ZigbeeNode node,byte channel, byte[] data) throws IOException {
+    public CoilOrSensor(ZigbeeNode node, byte channel, byte[] data) throws IOException {
         this.node = node;
         this.channel = channel;
         this.sensorType = data[0];
         this.dataType = data[1];
         this.value = 0;
         this.value += (short) ((short) (data[2] & 0xFF) << 8);
-        this.value += (short) (data[3]&0xFF);
+        this.value += (short) (data[3] & 0xFF);
     }
 
     public Long getId() {
@@ -139,7 +140,7 @@ public class CoilOrSensor {
         this.value = value;
     }
 
-    public String getSensorTypeString(){
+    public String getSensorTypeString() {
         return sensorTypeMap.get(this.getSensorType());
     }
 
@@ -158,7 +159,7 @@ public class CoilOrSensor {
                 ", value=" + value +
                 ", nodeAddr=" + nodeAddr +
                 ", gatewayId=" + gatewayId +
-                ", created=" + created+
+                ", created=" + created +
 
                 '}';
     }

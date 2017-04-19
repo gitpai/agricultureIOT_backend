@@ -1,9 +1,10 @@
-package com.zhangfuwen.webapp;
+package com.zhangfuwen;
 
 import com.zhangfuwen.collector.*;
 import com.zhangfuwen.info.ThresholdInfoRepository;
 import com.zhangfuwen.info.WarningRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -15,6 +16,7 @@ import java.util.concurrent.locks.ReentrantLock;
 /**
  * Created by dean on 4/18/17.
  */
+@EnableScheduling
 @Component
 public class CollectorTask {
     public static Config config;
@@ -42,6 +44,7 @@ public class CollectorTask {
 
     @Scheduled(fixedRate = 5000)
     public void updateSensor() {
+        System.out.println("scheduled");
         gatewayLock.lock();
         if(gateways==null) {
             gateways = gatewayRepository.findAll();
@@ -56,7 +59,6 @@ public class CollectorTask {
                 }
             }
 
-            //System.out.println("scheduled to collect at " + new Date());
             try {
                 gateway.collectAndPersist(config.isDevMode(),
                         zigbeeNodeRepository,
