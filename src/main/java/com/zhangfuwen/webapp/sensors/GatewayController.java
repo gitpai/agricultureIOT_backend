@@ -5,15 +5,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zhangfuwen.collector.Gateway;
 import com.zhangfuwen.collector.GatewayRepository;
 import com.zhangfuwen.CollectorTask;
+import com.zhangfuwen.storage.StorageService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
@@ -28,6 +27,9 @@ public class GatewayController {
     Logger logger = LoggerFactory.getLogger(GatewayController.class);
     @Autowired
     GatewayRepository gatewayRepository;
+
+    @Autowired
+    StorageService storageService;
 
     @RequestMapping(value = "/webapp/gateways", method = RequestMethod.GET)
     public String list(Model model) {
@@ -68,7 +70,7 @@ public class GatewayController {
                       @ModelAttribute(name="X") Float X,
                       @ModelAttribute(name="Y") Float Y,
                       @ModelAttribute(name="desc") String desc,
-                      @ModelAttribute(name="pic") String  pic)
+                      @RequestParam("pic") MultipartFile file)
     {
         CollectorTask.gatewayLock.lock();
         Gateway gateway = new Gateway(name,ip, port,max_nodes, max_channels, new HashMap<Byte,String>());
@@ -76,7 +78,8 @@ public class GatewayController {
         gateway.setX(X);
         gateway.setY(Y);
         gateway.setDesc(desc);
-        gateway.setPic(pic);
+        storageService.store(file);
+        gateway.setPic(file.getOriginalFilename());
         gatewayRepository.save(gateway);
         CollectorTask.gateways = null;
         CollectorTask.gatewayLock.unlock();

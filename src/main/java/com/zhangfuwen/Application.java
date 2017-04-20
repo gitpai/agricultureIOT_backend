@@ -2,9 +2,11 @@ package com.zhangfuwen;
 
 import com.zhangfuwen.collector.*;
 import com.zhangfuwen.info.ThresholdInfoRepository;
+import com.zhangfuwen.storage.StorageProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -20,8 +22,8 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 @SpringBootApplication
-@EnableScheduling
 @Controller
+@EnableConfigurationProperties(StorageProperties.class)
 public class Application extends SpringBootServletInitializer {
 
 

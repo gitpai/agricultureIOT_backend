@@ -45,7 +45,7 @@
               </span>
 
 
-            <form class="am-form tpl-form-line-form" method="POST" >
+            <form class="am-form tpl-form-line-form" enctype="multipart/form-data" method="POST" >
                 <span th:text="${error}"></span>
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
                 <div class="am-form-group">
@@ -81,7 +81,7 @@
                     <input type="text" name="desc" class="tpl-form-input" id="desc" placeholder="描述">
                 </div>
                 <div class="am-form-group">
-                    <input type="text" name="pic" class="tpl-form-input" id="pic" placeholder="图片">
+                    <input type="file" name="pic" class="tpl-form-input" id="pic" placeholder="图片">
                 </div>
 
                 <div class="am-form-group">
