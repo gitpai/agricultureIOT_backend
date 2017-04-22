@@ -7,24 +7,14 @@ import java.nio.*;
 /**
  * Created by dean on 3/13/17.
  */
-enum FunctionCode {
-    ReadOnlineStatus(0x01), ReadNodeSensors(0x03), WriteCoils(0x10),Error(0x81);
-    byte code;
-    FunctionCode(byte code) {
-        this.code = code;
-    }
-    FunctionCode(int code) {
-        this.code = (byte)code;
-    }
-};
 
 public class ModbusTCPPacket {
     short transactionId = 0x1501;
     short protocalId =0x0000;
     short length;
     byte addr;
-    byte function;
-    byte [] data;
+    public byte function;
+    public byte [] data;
     public ModbusTCPPacket(){};
     public static ModbusTCPPacket NewCommandPacket(byte addr, byte function, byte []data) {
         ModbusTCPPacket packet = new ModbusTCPPacket();

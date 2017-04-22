@@ -29,7 +29,7 @@
         </encoder>
     </appender>
 
-    <logger name="com.zhangfuwen.collector.Gateway" level="info"
+    <logger name="com.zhangfuwen.models.Gateway" level="info"
             additivity="false">
         <appender-ref ref="STDOUT" />
     </logger>

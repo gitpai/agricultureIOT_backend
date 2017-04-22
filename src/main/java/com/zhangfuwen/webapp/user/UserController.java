@@ -1,5 +1,11 @@
 package com.zhangfuwen.webapp.user;
 
+import com.zhangfuwen.models.user.SysRole;
+import com.zhangfuwen.models.user.SysUser;
+import com.zhangfuwen.services.user.SecurityService;
+import com.zhangfuwen.services.user.SysRoleService;
+import com.zhangfuwen.services.user.UserService;
+import com.zhangfuwen.validators.UserValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

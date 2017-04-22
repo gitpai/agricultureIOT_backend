@@ -64,6 +64,9 @@
                                     <tr>
                                         <th>id</th>
                                         <th>产生时间</th>
+                                        <th>网关</th>
+                                        <th>节点</th>
+                                        <th>通道</th>
                                         <th>读数</th>
                                         <th>上限</th>
                                         <th>下限</th>
@@ -77,13 +80,13 @@
                             </div>
 
                             <!--删除确认对话框-->
-                            <div id="doc-modal-2" class="am-modal am-modal-prompt" tabindex="-1">
+                            <div id="delete-confirm-dialog" class="am-modal am-modal-prompt" tabindex="-1">
                                 <div class="am-modal-dialog">
                                     <div class="am-modal-hd">确认
                                         <a href="javascript: void(0)" class="am-close am-close-spin"
                                            data-am-modal-close>&times;</a>
                                     </div>
-                                    <div class="am-modal-hd">是否真的删除？
+                                    <div class="am-modal-hd" id="msg-content">是否真的删除？
 
                                     </div>
                                     <div class="am-modal-footer">
@@ -106,48 +109,57 @@
 <script src="/assets/js/app.js"></script>
 <script>
     function showList() {
-        var gateway = $("#gateway option:selected").val();
-
         var url = "/api/warnings" ;
         jQuery.getJSON(url, function (dataJson) {
             $("#list").empty();
             console.log(dataJson);
             dataJson.forEach(function (e) {
+                //忽略已关闭告警条目
+                if(e.closed!=null) {
+                    return;
+                }
+                //显示未关闭告警条目
                 $("#list").append("<tr class='gradeX'>" + "" +
                     "<td>" + e.id + "</td>" +
                     "<td>" + e.created + "</td>" +
+                    "<td>" + e.readout.gateway.host+":"+e.readout.gateway.port + "</td>" +
+                    "<td>" + e.readout.nodeAddr + "</td>" +
+                    "<td>" + e.readout.channel + "</td>" +
                     "<td>" + e.readout.realValue + "</td>" +
                     "<td>" + e.thresholdInfo.upperLimit + "</td>" +
                     "<td>" + e.thresholdInfo.lowerLimit + "</td>" +
                     "<td>" +
-                    "<a class='del'  onclick='deleteNodeInfo(this);' data-url='/api/threshold/del?id="
-                    + e.id +"'>删除</a>" +
+                    "<button class='del'  onclick='deleteNodeInfo(this);' "
+                    + e.id +" data-id='"+e.id+"'>删除</button>" +
                     "</td>"
                 );
             });
         });
     }
-    $(document).ready(
-        function () {
-            $("#query").click(function () {
-                showList();
-            })
-        }
-    );
 
+    //文档加载完，显示列表
+    $(document).ready(function () {
+        showList();
+    });
+
+
+    // 删除按钮点击时触发动作
+    var targeturl;
     function deleteNodeInfo(e) {
-        var url = e.getAttribute("data-url");
-
-        $('#doc-modal-2').modal({
+        targeturl ="/api/warnings/del?id="+ e.getAttribute("data-id");
+        $('#msg-content').text("是否确定关闭告警？id为"+e.getAttribute("data-id"));
+        $('#delete-confirm-dialog').modal({
             relatedTarget: this,
             onConfirm: function (e) {
-                $.get(url, function(){
-                    showList();
+                $.ajax({
+                    url:targeturl,
+                    type:'GET',
+                    success:function(){
+                        showList();
+                    },
                 });
             },
-            onCancel: function (e) {
-
-            }
+            onCancel: function (e) { }
         });
 
     }

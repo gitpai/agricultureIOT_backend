@@ -1,27 +1,26 @@
 package com.zhangfuwen;
 
-import com.zhangfuwen.collector.*;
-import com.zhangfuwen.info.ThresholdInfoRepository;
 import com.zhangfuwen.storage.StorageProperties;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
-import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 
-import java.io.IOException;
-import java.util.Date;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-
 @SpringBootApplication
+//        (
+//        scanBasePackages = {
+//                "com.zhangfuwen.models",
+//                "com.zhangfuwen.models.user",
+//                "com.zhangfuwen.repositories",
+//                "com.zhangfuwen.repositories.user",
+//                "com.zhangfuwen.services",
+//                "com.zhangfuwen.services.user",
+//                "com.zhangfuwen.storage",
+//                "com.zhangfuwen.validators",
+//                "com.zhangfuwen.webapp.devices",
+//                "com.zhangfuwen.webapp.user",
+//                })
 @Controller
 @EnableConfigurationProperties(StorageProperties.class)
 public class Application extends SpringBootServletInitializer {

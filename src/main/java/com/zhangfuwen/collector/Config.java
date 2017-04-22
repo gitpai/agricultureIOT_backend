@@ -1,5 +1,6 @@
 package com.zhangfuwen.collector;
 
+import com.zhangfuwen.models.Gateway;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
