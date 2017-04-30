@@ -41,8 +41,9 @@ public class CollectorTask {
     @Autowired
     WarningRepository warningRepository;
 
-    @Scheduled(fixedRate = 5000)
+   // @Scheduled(fixedRate = 5000)
     public void updateSensor() {
+
         System.out.println("scheduled");
         gatewayLock.lock();
         if(gateways==null) {
