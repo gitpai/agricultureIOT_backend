@@ -59,6 +59,23 @@ public class GatewayController {
     public String addpage(Model model) {
         return "gateways-add";
     }
+
+    /**
+     * 填加网关post controller
+     * @param model
+     * @param redirectAttributes
+     * @param name
+     * @param ip
+     * @param port
+     * @param max_nodes
+     * @param max_channels
+     * @param interval
+     * @param X
+     * @param Y
+     * @param desc
+     * @param file
+     * @return
+     */
     @RequestMapping(value = "/webapp/gateways/add", method = RequestMethod.POST)
     public String add(Model model, final RedirectAttributes redirectAttributes,
                       @ModelAttribute(name = "name") String name,
