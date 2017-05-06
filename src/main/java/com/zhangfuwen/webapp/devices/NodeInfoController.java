@@ -47,6 +47,7 @@ public class NodeInfoController {
 
     @RequestMapping(value = "/webapp/nodeinfo/add", method = RequestMethod.GET)
     public String nodeInfoAdd(Model model) {
+        model.addAttribute("gateways", gatewayRepository.findAll());
         return "nodeinfo-add";
     }
 

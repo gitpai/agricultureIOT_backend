@@ -268,31 +268,31 @@
         });
 
         // new button handler
-        $('#new-button').on('click', function () {
-
-            $("#gatewayId").val($("#gateway").val());
-            $('#doc-modal-1').modal({
-                relatedTarget: this,
-                onConfirm: function (e) {
-                    var post_url = $("#new_node_info_form").attr("action");
-                    $.ajax({
-                        url: post_url,
-                        type: 'post',
-                        cache: false,
-                        processData: false,
-                        contentType: false,
-                        data: new FormData($('#new_node_info_form')[0]),
-                        success: function () {
-                            alert("提交成功")
-                        }
-                    });
-                    showNodeInfo();
-                },
-                onCancel: function (e) {
-
-                }
-            });
-        });
+//        $('#new-button').on('click', function () {
+//
+//            $("#gatewayId").val($("#gateway").val());
+//            $('#doc-modal-1').modal({
+//                relatedTarget: this,
+//                onConfirm: function (e) {
+//                    var post_url = $("#new_node_info_form").attr("action");
+//                    $.ajax({
+//                        url: post_url,
+//                        type: 'post',
+//                        cache: false,
+//                        processData: false,
+//                        contentType: false,
+//                        data: new FormData($('#new_node_info_form')[0]),
+//                        success: function () {
+//                            alert("提交成功")
+//                        }
+//                    });
+//                    showNodeInfo();
+//                },
+//                onCancel: function (e) {
+//
+//                }
+//            });
+//        });
 
 
     });

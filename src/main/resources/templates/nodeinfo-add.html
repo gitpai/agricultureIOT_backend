@@ -49,11 +49,12 @@
                   action="/webapp/nodeinfo/add" enctype="multipart/form-data" method="post">
                 <input type="hidden" th:name="${_csrf.parameterName}"
                        th:value="${_csrf.token}"/>
-                <div class="am-form-group">
-                    <input type="text" class="tpl-form-input am-modal-prompt-input"
-                           id="gatewayId"
-                           name="gatewayId"
-                           placeholder="网关id"/>
+                <div class="am-form-group ">
+                    <label for="gatewayId" class="am-form-label">网关</label>
+                    <select name="gatewayId" id="gatewayId">
+                        <option th:each="gateway : ${gateways}" th:value="${gateway.id}"
+                                th:text="|${gateway.host}:${gateway.port}|"></option>
+                    </select>
                 </div>
 
                 <div class="am-form-group">
