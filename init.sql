@@ -1,4 +1,4 @@
-create database gateway;
+create database gateway character set utf8;
 use gateway;
 
 
@@ -25,8 +25,20 @@ INSERT INTO gateway.sys_user_roles(sys_user_id, roles_id) VALUES (
     1,1
 );
 
+CREATE TABLE `t_nodeinfo` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `x` float DEFAULT NULL,
+  `y` float DEFAULT NULL,
+  `desc_string` varchar(255) DEFAULT NULL,
+  `gateway_id` bigint(20) DEFAULT NULL,
+  `node_addr` tinyint(4) DEFAULT NULL,
+  `node_name` varchar(255) DEFAULT NULL,
+  `pic` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-#==============================
+
+  #==============================
 
 
   #=======================
