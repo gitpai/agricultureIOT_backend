@@ -191,8 +191,8 @@
     //将坐标点写到框中
     function writeLocalIntoInput(p){
         if(p){
-            document.getElementById("X").value=p.lat;
-            document.getElementById("Y").value=p.lng;
+            document.getElementById("X").value=p.lng;//经度
+            document.getElementById("Y").value=p.lat;//纬度
             document.getElementById("localtion").value=p.lat+','+p.lng;
             //callGpsspg(p.lat+','+p.lng);
         }else{

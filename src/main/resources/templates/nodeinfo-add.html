@@ -116,7 +116,6 @@
 <script src="/assets/js/app.js"></script>
 <script>
     function editNodeInfo() {
-        console.log("adfasdf");
         $('#doc-modal-1').modal({
             relatedTarget: this,
             onConfirm: function () {
@@ -193,8 +192,8 @@
     //将坐标点写到框中
     function writeLocalIntoInput(p){
         if(p){
-            document.getElementById("X").value=p.lat;
-            document.getElementById("Y").value=p.lng;
+            document.getElementById("X").value=p.lng;
+            document.getElementById("Y").value=p.lat;
             document.getElementById("localtion").value=p.lat+','+p.lng;
             //callGpsspg(p.lat+','+p.lng);
         }else{
