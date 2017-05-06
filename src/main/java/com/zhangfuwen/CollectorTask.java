@@ -9,6 +9,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.Date;
+import java.sql.Timestamp;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -41,7 +43,7 @@ public class CollectorTask {
     @Autowired
     WarningRepository warningRepository;
 
-   // @Scheduled(fixedRate = 5000)
+    @Scheduled(fixedRate = 1000)
     public void updateSensor() {
 
         System.out.println("scheduled");
@@ -50,6 +52,18 @@ public class CollectorTask {
             gateways = gatewayRepository.findAll();
         }
         for (Gateway gateway : gateways) {
+            if(gateway.lastCollected==null)
+            {
+                gateway.lastCollected = new Timestamp((new Date()).getTime());
+            }
+            if( (new Date()).getTime() - gateway.lastCollected.getTime() > gateway.getInterval()*1000  )
+            {
+                gateway.lastCollected = new Timestamp(((new Date()).getTime()));
+            }
+            else
+            {
+                continue;
+            }
             if (!config.isDevMode()) {
                 try {
                     gateway.init();

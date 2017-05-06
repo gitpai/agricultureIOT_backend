@@ -13,6 +13,7 @@ import com.zhangfuwen.utils.Utils;
 import javax.persistence.*;
 import java.io.*;
 import java.net.Socket;
+import java.sql.Timestamp;
 import java.util.*;
 
 /**
@@ -40,6 +41,9 @@ public class Gateway {
 
     @Column(name="poll_interval")
     public int interval;
+    @Transient
+    public Timestamp lastCollected=null;
+
     @Column(name="X")
     public float X;
     @Column(name = "Y")
