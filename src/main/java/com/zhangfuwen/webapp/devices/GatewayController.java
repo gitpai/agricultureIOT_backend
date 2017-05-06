@@ -31,7 +31,7 @@ public class GatewayController {
     @Autowired
     StorageService storageService;
 
-    @RequestMapping(value = "/webapp/gateways", method = RequestMethod.GET)
+    @RequestMapping(value = {"/webapp/gateways" ,"/","/index","/index.html"}, method = RequestMethod.GET)
     public String list(Model model) {
         Iterable<Gateway> gatewayList = gatewayRepository.findAll();
         model.addAttribute("gateways", gatewayList);
@@ -76,7 +76,7 @@ public class GatewayController {
      * @param file
      * @return
      */
-    @RequestMapping(value = {"/webapp/gateways/add","/","/index","index.html"}, method = RequestMethod.POST)
+    @RequestMapping(value = {"/webapp/gateways/add"}, method = RequestMethod.POST)
     public String add(Model model, final RedirectAttributes redirectAttributes,
                       @ModelAttribute(name = "name") String name,
                       @ModelAttribute(name="ip") String ip,
