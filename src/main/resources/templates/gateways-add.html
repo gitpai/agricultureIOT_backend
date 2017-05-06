@@ -9,15 +9,16 @@
     <meta name="keywords" content="index">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="renderer" content="webkit">
-    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
     <link rel="icon" type="image/png" href="/assets/i/favicon.png">
     <link rel="apple-touch-icon-precomposed" href="/assets/i/app-icon72x72@2x.png">
-    <meta name="apple-mobile-web-app-title" content="Amaze UI" />
-    <link rel="stylesheet" href="/assets/css/amazeui.min.css" />
-    <link rel="stylesheet" href="/assets/css/amazeui.datatables.min.css" />
+    <meta name="apple-mobile-web-app-title" content="Amaze UI"/>
+    <link rel="stylesheet" href="/assets/css/amazeui.min.css"/>
+    <link rel="stylesheet" href="/assets/css/amazeui.datatables.min.css"/>
     <link rel="stylesheet" href="/assets/css/app.css">
     <script src="/assets/js/jquery.min.js"></script>
-    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=8579ee3b967425dc22f0c3953825ec95"></script>
+    <script type="text/javascript"
+            src="http://api.map.baidu.com/api?v=2.0&ak=8579ee3b967425dc22f0c3953825ec95"></script>
 
     <!--<script src="http://api.map.baidu.com/getscript?v=2.0&ak=8579ee3b967425dc22f0c3953825ec95&services=&t=20170506025723"></script>-->
 </head>
@@ -47,7 +48,7 @@
               </span>
 
 
-            <form class="am-form tpl-form-line-form" enctype="multipart/form-data" method="POST" >
+            <form class="am-form tpl-form-line-form" enctype="multipart/form-data" method="POST">
                 <span th:text="${error}"></span>
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
                 <div class="am-form-group">
@@ -73,22 +74,32 @@
                 <div class="am-form-group">
                     <input type="text" name="interval" class="tpl-form-input" id="interval" placeholder="轮询时间间隔">
                 </div>
-                <div class="am-form-group">
-                    <input type="text" name="X" class="tpl-form-input" id="X" placeholder="X" onclick="editNodeInfo()">
+                <div class="am-input-group" style="border-bottom:1px solid #c2cad8;height: 32px;margin-bottom: 18px; ">
+                    <input type="text" name="X" class="input-form-field" style="border: none; padding: 6px 0px;padding-bottom: 4px" id="X" placeholder="X">
+                    <span class="am-input-group-label" style="border:none;background: white; height:32px;line-height: 32px;">
+                        <i class="am-icon-map-marker"  style="line-height: 32px;" onclick="selectPointInMap()" ></i>
+                    </span>
                 </div>
-                <div class="am-form-group">
-                    <input type="text" name="Y" class="tpl-form-input" id="Y" placeholder="Y" onclick="editNodeInfo()">
-                </div>
-                <div class="am-form-group">
-                    <input type="text" name="desc" class="tpl-form-input" id="desc" placeholder="描述">
-                </div>
-                <div class="am-form-group">
-                    <input type="file" name="pic" class="tpl-form-input" id="pic" placeholder="图片">
+                <div class="am-input-group" style="border-bottom:1px solid #c2cad8; height: 32px;margin-bottom: 18px; ">
+                    <input type="text" name="Y" class="input-form-field" style="border: none; padding: 6px 0px;padding-bottom: 4px" id="Y" placeholder="Y">
+                    <span class="am-input-group-label" style="border:none;background: white; height:32px;line-height: 32px;">
+                        <i class="am-icon-map-marker" style="line-height: 32px;" onclick="selectPointInMap()" ></i>
+                    </span>
                 </div>
 
-                <div class="am-form-group">
-                    <button type="submit" class="am-btn am-btn-primary  am-btn-block tpl-btn-bg-color-success  tpl-login-btn">提交</button>
-                </div>
+                    <div class="am-form-group">
+                        <input type="text" name="desc" class="tpl-form-input" id="desc" placeholder="描述">
+                    </div>
+                    <div class="am-form-group">
+                        <span>上传一张位置信息图片</span>
+                        <input type="file" name="pic" class="tpl-form-input" id="pic" placeholder="图片">
+                    </div>
+
+                    <div class="am-form-group">
+                        <button type="submit"
+                                class="am-btn am-btn-primary  am-btn-block tpl-btn-bg-color-success  tpl-login-btn">提交
+                        </button>
+                    </div>
             </form>
         </div>
 
@@ -99,11 +110,12 @@
                        data-am-modal-close>&times;</a>
                 </div>
                 <div class="am-modal-hd">
-                    城市名称：<input id="address" onKeyUp="keyup(event)"/><input type="button" value="获取一下" onclick="getLocalByAddr()"/>
+                    城市名称：<input id="address" onKeyUp="keyup(event)"/><input type="button" value="获取一下"
+                                                                            onclick="getLocalByAddr()"/>
                     <div id="allmap" style="width:100%; height: 600px"></div>
                 </div>
                 <div class="am-modal-footer">
-                    百度坐标：<input id="localtion" />
+                    百度坐标：<input id="localtion"/>
                     <span class="am-modal-btn" data-am-modal-confirm>选好了</span>
                 </div>
             </div>
@@ -113,8 +125,7 @@
 <script src="/assets/js/amazeui.min.js"></script>
 <script src="/assets/js/app.js"></script>
 <script>
-    function editNodeInfo() {
-        console.log("adfasdf");
+    function selectPointInMap() {
         $('#doc-modal-1').modal({
             relatedTarget: this,
             onConfirm: function () {
@@ -131,19 +142,23 @@
     var map;
     $(document).ready(function () {
         // 百度地图API功能
-        map = new BMap.Map("allmap", {enableMapClick:false}); //关闭默认地图POI事件
+        map = new BMap.Map("allmap", {enableMapClick: false}); //关闭默认地图POI事件
         var redPoint;
         var g_point;
         //滚轮缩放功能
         map.enableScrollWheelZoom(true);
-        var point = new BMap.Point(116.331398,39.897445);
-        map.centerAndZoom(point,12);
+        var point = new BMap.Point(116.331398, 39.897445);
+        map.centerAndZoom(point, 12);
+
+        map.addControl(new BMap.NavigationControl());
+        map.addControl(new BMap.ScaleControl());
+        map.addControl(new BMap.OverviewMapControl());
         // 创建地址解析器实例
         myGeo = new BMap.Geocoder();
         // 将地址解析结果显示在地图上,并调整地图视野
         getLocalByAddr();
         //单击获取点击的经纬度
-        map.addEventListener("click",function(e){
+        map.addEventListener("click", function (e) {
             //alert(e.point.lng + "," + e.point.lat);
             writeLocalIntoInput(e.point);
             map.removeOverlay(redPoint);
@@ -160,20 +175,20 @@
         });
     });
 
-    function translatePoint(position){
+    function translatePoint(position) {
         var currentLat = position.coords.latitude;
         var currentLon = position.coords.longitude;
         var gpsPoint = new BMap.Point(currentLon, currentLat);
         BMap.Convertor.translate(gpsPoint, 0, function (point) {
-            map.centerAndZoom(point,15);
+            map.centerAndZoom(point, 15);
         }); //转换坐标
     }
 
     //根据地址获取坐标点信息，并将坐标点作为中心点
-    function getLocalByAddr(){
+    function getLocalByAddr() {
         var address = document.getElementById("address").value;
         console.log(address);
-        myGeo.getPoint(address, function(point){
+        myGeo.getPoint(address, function (point) {
             writeLocalIntoInput(point);
             if (point) {
                 map.centerAndZoom(point, 16);
@@ -183,54 +198,54 @@
                 g_point = point;
                 //var infoWindow = new BMap.InfoWindow(point.lat+','+point.lng, opts);  // 创建信息窗口对象
                 //map.openInfoWindow(infoWindow,point); //开启信息窗口
-            }else{
+            } else {
                 alert("您选择地址没有解析到结果!");
             }
         }, "北京市");
     }
     //将坐标点写到框中
-    function writeLocalIntoInput(p){
-        if(p){
-            document.getElementById("X").value=p.lng;//经度
-            document.getElementById("Y").value=p.lat;//纬度
-            document.getElementById("localtion").value=p.lat+','+p.lng;
+    function writeLocalIntoInput(p) {
+        if (p) {
+            document.getElementById("X").value = p.lng;//经度
+            document.getElementById("Y").value = p.lat;//纬度
+            document.getElementById("localtion").value = p.lat + ',' + p.lng;
             //callGpsspg(p.lat+','+p.lng);
-        }else{
-            document.getElementById("X").value='';
-            document.getElementById("Y").value='';
+        } else {
+            document.getElementById("X").value = '';
+            document.getElementById("Y").value = '';
 
         }
     }
     //监听地址输入框的回车事件
-    function keyup(event){
+    function keyup(event) {
         if (event.keyCode == "13") {
             //回车执行查询
             getLocalByAddr();
         }
     }
     //复制到剪切板
-    function copyToClipboard(){
+    function copyToClipboard() {
         var value = document.getElementById("localtion").value;
-        if(window.clipboardData){
+        if (window.clipboardData) {
             window.clipboardData.setData("text", value);
             alert(window.clipboardData.getData('text'))
-        }else{
+        } else {
             alert("只支持IE");
         }
     }
     var opts = {
-        width : 400,     // 信息窗口宽度
+        width: 400,     // 信息窗口宽度
         height: 60,     // 信息窗口高度
-        title : "" , // 信息窗口标题
-        enableMessage:true,//设置允许信息窗发送短息
-        message:""
+        title: "", // 信息窗口标题
+        enableMessage: true,//设置允许信息窗发送短息
+        message: ""
     }
 
     /////////////////////////////////////////////////////////////////////////
     //调用gpsspg网站，jsonp形式，确定，每日每个oid和key只有访问2000次
 
     /*参数lat_lng 可以传递 lat或者lng中的一个*/
-    function baiduToGPS(lat_lng){
+    function baiduToGPS(lat_lng) {
         var abs_lat_lng = Math.abs(lat_lng);
         //a_  意为all，含有整数和小数部分。
         //o_  意为only，只有小数部分
@@ -248,34 +263,34 @@
 
     //请求gpsspg网站的回调函数
     function jsoncallback(data) {
-        console.log('转换状态:'+data.status);
+        console.log('转换状态:' + data.status);
         //jsoncallback&&jsoncallback({"status":"200","result":[{"lat":30.99881860,"lng":108.69433701}],"match":[1]})
-        console.log('GPS坐标:'+data.result[0].lat+','+data.result[0].lng);
+        console.log('GPS坐标:' + data.result[0].lat + ',' + data.result[0].lng);
         var lat = data.result[0].lat;
         var lng = data.result[0].lng;
         var lat_value = baiduToGPS(lat);
         var lng_value = baiduToGPS(lng);
         var gps = '';
-        if(lat >= 0){
-            gps = gps + '北纬N'+lat_value;
-        }else{
-            gps = gps + '南纬S'+lat_value;
+        if (lat >= 0) {
+            gps = gps + '北纬N' + lat_value;
+        } else {
+            gps = gps + '南纬S' + lat_value;
         }
         gps = gps + ',';
-        if(lng >= 0){
-            gps = gps + '东经E'+lng_value;
-        }else{
-            gps = gps + '西经W'+lng_value;
+        if (lng >= 0) {
+            gps = gps + '东经E' + lng_value;
+        } else {
+            gps = gps + '西经W' + lng_value;
         }
         console.log(gps);
         //写到框中
-        document.getElementById("gpsLocaltion").value=gps;
-        var infoWindow = new BMap.InfoWindow('百度坐标：'+g_point.lat+','+g_point.lng+'<br/>'+'GPS坐标：'+gps, opts);  // 创建信息窗口对象
-        map.openInfoWindow(infoWindow,g_point); //开启信息窗口
+        document.getElementById("gpsLocaltion").value = gps;
+        var infoWindow = new BMap.InfoWindow('百度坐标：' + g_point.lat + ',' + g_point.lng + '<br/>' + 'GPS坐标：' + gps, opts);  // 创建信息窗口对象
+        map.openInfoWindow(infoWindow, g_point); //开启信息窗口
     }
 
     //第一种方式   getJSON形式
-    function callGpsspg(latAndLng){
+    function callGpsspg(latAndLng) {
         $.getJSON("http://api.gpsspg.com/convert/latlng/?jsoncallback=?",
             {
                 oid: "1905",
@@ -284,8 +299,8 @@
                 to: "0",
                 //latlng: "31.0026777169,108.7051969740",
                 latlng: latAndLng,
-                output:"jsonp",
-                callback:"jsoncallback"
+                output: "jsonp",
+                callback: "jsoncallback"
             }
         );
     }
