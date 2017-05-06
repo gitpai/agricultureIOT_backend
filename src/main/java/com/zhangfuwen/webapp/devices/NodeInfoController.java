@@ -76,8 +76,7 @@ public class NodeInfoController {
         logger.info(nodeInfoFrom.toString());
         if(!file.isEmpty())
         {
-            storageService.store(file);
-            nodeInfoFrom.setPic(file.getOriginalFilename());
+            nodeInfoFrom.setPic(storageService.store(file));
         }
 
         NodeInfo info = nodeInfoRepository.findTop1ByGatewayIdAndNodeAddr(nodeInfoFrom.getGatewayId(), nodeInfoFrom.getNodeAddr());

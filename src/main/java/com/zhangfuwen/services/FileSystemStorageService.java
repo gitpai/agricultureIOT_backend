@@ -17,6 +17,7 @@ import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Random;
 import java.util.stream.Stream;
 /**
  * Created by dean on 4/21/17.
@@ -34,15 +35,27 @@ public class FileSystemStorageService implements StorageService {
     }
 
     @Override
-    public void store(MultipartFile file) {
+    public String store(MultipartFile file) {
         try {
             if (file.isEmpty()) {
                 throw new StorageException("Failed to store empty file " + file.getOriginalFilename());
             }
-            Files.copy(file.getInputStream(), this.rootLocation.resolve(file.getOriginalFilename()));
+            String newFilename = makeNewFileName(file.getOriginalFilename());
+            Files.copy(file.getInputStream(), this.rootLocation.resolve(newFilename));
+            return newFilename;
         } catch (IOException e) {
             throw new StorageException("Failed to store file " + file.getOriginalFilename(), e);
         }
+    }
+
+    private String makeNewFileName(String originalFilename)
+    {
+        String newFilename = originalFilename;
+        while(Files.exists(rootLocation.resolve(newFilename)))
+        {
+            newFilename =  new Random().nextInt(100000) + "_" + newFilename;
+        }
+        return newFilename;
     }
 
     @Override

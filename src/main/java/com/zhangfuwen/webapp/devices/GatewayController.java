@@ -98,8 +98,7 @@ public class GatewayController {
 
         if(!file.isEmpty())
         {
-            storageService.store(file);
-            gateway.setPic(file.getOriginalFilename());
+            gateway.setPic(storageService.store(file));
         }
 
         gatewayRepository.save(gateway);
