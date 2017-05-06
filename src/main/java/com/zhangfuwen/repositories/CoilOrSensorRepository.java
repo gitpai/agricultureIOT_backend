@@ -7,6 +7,7 @@ package com.zhangfuwen.repositories;
 
 import com.zhangfuwen.models.CoilOrSensor;
 import com.zhangfuwen.models.ZigbeeNode;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
@@ -31,4 +32,13 @@ public interface CoilOrSensorRepository extends PagingAndSortingRepository<CoilO
             @Param("start") Timestamp start,
             @Param("end") Timestamp end
     );
+
+    List<CoilOrSensor> findTop30ByGatewayIdAndNodeAddrAndChannelOrderByCreatedDesc(
+            @Param("gatewayId") Long gatewayId,
+            @Param("nodeAddr") Byte nodeAddr,
+            @Param("channel") Byte channel
+    );
+
+
+
 }

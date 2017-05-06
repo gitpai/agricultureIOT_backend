@@ -106,8 +106,8 @@ public class Utils {
         }else{
             points = dataType&(byte)0x7F;
         }
-        System.out.println((double)points);
-        System.out.println((double)realvalue);
+//        System.out.println((double)points);
+//        System.out.println((double)realvalue);
         double doubleValue = ((double)realvalue) / (int)Math.pow((double)10, (double)points);
         NumberFormat ddf1= NumberFormat.getNumberInstance() ;
 

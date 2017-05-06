@@ -188,7 +188,7 @@ public class Gateway {
     }
 
     /**
-     * Read Sensor readouts
+     * Read SensorReadoutController readouts
      *
      * @throws IOException
      */

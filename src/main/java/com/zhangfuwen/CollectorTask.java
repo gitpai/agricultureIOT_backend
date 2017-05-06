@@ -46,7 +46,7 @@ public class CollectorTask {
     @Scheduled(fixedRate = 1000)
     public void updateSensor() {
 
-        System.out.println("scheduled");
+//        System.out.println("scheduled");
         gatewayLock.lock();
         if(gateways==null) {
             gateways = gatewayRepository.findAll();
@@ -64,6 +64,7 @@ public class CollectorTask {
             {
                 continue;
             }
+            System.out.println("interval "+gateway.getInterval()+"collecting for gateway " + gateway.getHost() + ":" + gateway.getPort());
             if (!config.isDevMode()) {
                 try {
                     gateway.init();

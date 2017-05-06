@@ -42,7 +42,7 @@ public class ZigbeeNode {
     @Transient
     public NodeInfo info;
     /**
-     * Sensor Readouts
+     * SensorReadoutController Readouts
      */
     @OneToMany(targetEntity = CoilOrSensor.class, mappedBy = "node")
     List<CoilOrSensor> coilOrSensors;

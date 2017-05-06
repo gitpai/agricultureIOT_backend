@@ -132,6 +132,7 @@
         jQuery.getJSON(url, function (dataJson) {
             var xData = Array();
             var yData = Array();
+            dataJson.reverse();
             dataJson.forEach(function (e) {
                 xData.push(e.created);
                 yData.push(e.realValue);

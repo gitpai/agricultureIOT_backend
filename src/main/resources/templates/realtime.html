@@ -108,6 +108,7 @@
         jQuery.getJSON(url, function (dataJson) {
             var xData = Array();
             var yData = Array();
+            dataJson.reverse();
             dataJson.forEach(function (e) {
                 xData.push(e.created);
                 yData.push(e.realValue);
@@ -167,7 +168,7 @@
 </script>
 <script>
     $(document).ready(function () {
-
+        var url;
         $("#query").click(function () {
             var gateway = $("#gateway option:selected").val();
             var node = $("#node option:selected").val();
@@ -177,13 +178,19 @@
             var start = $("#datetime1").val();
             var end = $("#datetime2").val();
 
-            var url = "/webapp/realtime?gatewayid=" + gateway + "&nodeaddr=" + node + "&channel=" + chan + "&historyType=" + historyType;
+            url = "/api/realtime?gatewayid=" + gateway + "&nodeaddr=" + node + "&channel=" + chan;
 
             graph(url);
         })
 
-
+        function redraw(){
+            console.log("xxxxx");
+            graph(url);
+            setTimeout(redraw, 3000);
+        }
+        setTimeout(redraw, 3000);
     });
+
 </script>
 
 </body>
