@@ -74,8 +74,12 @@ public class NodeInfoController {
         nodeInfoFrom.setY(Y);
         nodeInfoFrom.setDesc(desc);
         logger.info(nodeInfoFrom.toString());
-        storageService.store(file);
-        nodeInfoFrom.setPic(file.getOriginalFilename());
+        if(!file.isEmpty())
+        {
+            storageService.store(file);
+            nodeInfoFrom.setPic(file.getOriginalFilename());
+        }
+
         NodeInfo info = nodeInfoRepository.findTop1ByGatewayIdAndNodeAddr(nodeInfoFrom.getGatewayId(), nodeInfoFrom.getNodeAddr());
         if(info==null){
             nodeInfoRepository.save(nodeInfoFrom);

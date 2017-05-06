@@ -137,7 +137,9 @@
                         "<a onclick='showMap("+nodeinfo.y+","+nodeinfo.y+")'>"+ nodeinfo.x+" : "+ nodeinfo.y +"</a>"+
                     "</td>" +
                     "<td>" + nodeinfo.desc + "</td>" +
-                    "<td>" + nodeinfo.pic + "</td>" +
+                    "<td>"
+                        +"<a href='/uploaded/" + nodeinfo.pic +"'>"+nodeinfo.pic+"</a>"
+                    + "</td>" +
                     "<td>" +
                     "<a class='del'  onclick='deleteNodeInfo(this);' data-url='/webapp/delnodeinfo?gatewayid=" + nodeinfo.gatewayId + "&nodeaddr=" + nodeinfo.nodeAddr + "'>删除</a>" +
                     "<a class='edit am-hide'  onclick='editNodeInfo(this);'>编辑</a>" +

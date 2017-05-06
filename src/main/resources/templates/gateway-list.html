@@ -93,7 +93,9 @@
                                             <a th:attr="data-position=${gateway.X}+':'+${gateway.Y}" th:text="${gateway.X}+':'+${gateway.Y}" onclick="showMap(this)"></a>
                                         </td>
                                         <td th:text="${gateway.desc}"></td>
-                                        <td th:text="${gateway.pic}"></td>
+                                        <td >
+                                            <a th:href="'/uploaded/'+${gateway.pic}" th:text="${gateway.pic}"></a>
+                                        </td>
                                         <td>
                                             <a class="am-btn am-btn-default"
                                                th:href="@{/webapp/nodes(gatewayid=${gateway.id})}"

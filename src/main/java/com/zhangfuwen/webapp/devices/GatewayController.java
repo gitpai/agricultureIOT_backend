@@ -95,8 +95,13 @@ public class GatewayController {
         gateway.setX(X);
         gateway.setY(Y);
         gateway.setDesc(desc);
-        storageService.store(file);
-        gateway.setPic(file.getOriginalFilename());
+
+        if(!file.isEmpty())
+        {
+            storageService.store(file);
+            gateway.setPic(file.getOriginalFilename());
+        }
+
         gatewayRepository.save(gateway);
         CollectorTask.gateways = null;
         CollectorTask.gatewayLock.unlock();
