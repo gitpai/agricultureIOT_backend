@@ -2,71 +2,69 @@
     <!-- 菜单 -->
     <ul class="sidebar-nav">
 
-        <li class="sidebar-nav-heading">Components <span class="sidebar-nav-heading-info"> 附加组件</span></li>
-        <li class="sidebar-nav-link">
-            <a href="index.html" class="active">
-                <i class="am-icon-home sidebar-nav-link-logo"></i> 首页
-            </a>
-        </li>
-        <li class="sidebar-nav-link">
-            <a href="/webapp/gateways">
-                <i class="am-icon-table sidebar-nav-link-logo"></i> 网关设备管理
-            </a>
-        </li>
-        <li class="sidebar-nav-link">
-            <a href="/webapp/nodeinfo">
-                <i class="am-icon-table sidebar-nav-link-logo"></i> zigbee节点管理
-            </a>
-        </li>
-        <li class="sidebar-nav-link">
-            <a href="/webapp/threshold">
-                <i class="am-icon-table sidebar-nav-link-logo"></i> 告警阈值管理
-            </a>
-        </li>
-        <li class="sidebar-nav-link">
-            <a href="/webapp/warnings">
-                <i class="am-icon-table sidebar-nav-link-logo"></i> 告警管理
-            </a>
-        </li>
-        <li class="sidebar-nav-link">
-            <a href="/webapp/gateways">
-                <i class="am-icon-calendar sidebar-nav-link-logo"></i> 实时数据查看
-            </a>
-        </li>
-        <li class="sidebar-nav-link">
-            <a href="/webapp/history">
-                <i class="am-icon-wpforms sidebar-nav-link-logo"></i> 历史数据与曲线
-
-            </a>
-        </li>
-        <li class="sidebar-nav-link">
-            <a href="chart.html">
-                <i class="am-icon-bar-chart sidebar-nav-link-logo"></i> 图表
-
-            </a>
-        </li>
-
-        <li class="sidebar-nav-heading">Page<span class="sidebar-nav-heading-info"> 常用页面</span></li>
+        <!--设备管理-->
         <li class="sidebar-nav-link">
             <a href="javascript:;" class="sidebar-nav-sub-title">
-                <i class="am-icon-table sidebar-nav-link-logo"></i> 数据列表
+                <i class="am-icon-table sidebar-nav-link-logo"></i> 设备管理
                 <span class="am-icon-chevron-down am-fr am-margin-right-sm sidebar-nav-sub-ico"></span>
             </a>
-            <ul class="sidebar-nav sidebar-nav-sub">
+            <ul class="sidebar-nav sidebar-nav-sub" style="display: block">
                 <li class="sidebar-nav-link">
-                    <a href="table-list.html">
-                        <span class="am-icon-angle-right sidebar-nav-link-logo"></span> 文字列表
+                    <a href=/webapp/gateways">
+                        <span class="am-icon-angle-right sidebar-nav-link-logo"></span> 网关设备管理
                     </a>
                 </li>
 
                 <li class="sidebar-nav-link">
-                    <a href="table-list-img.html">
-                        <span class="am-icon-angle-right sidebar-nav-link-logo"></span> 图文列表
+                    <a href="/webapp/nodeinfo">
+                        <span class="am-icon-angle-right sidebar-nav-link-logo"></span> ZigBee节点信息管理
                     </a>
                 </li>
             </ul>
         </li>
 
+
+        <!--告警-->
+        <li class="sidebar-nav-link">
+            <a href="javascript:;" class="sidebar-nav-sub-title">
+                <i class="am-icon-table sidebar-nav-link-logo"></i> 告警
+                <span class="am-icon-chevron-down am-fr am-margin-right-sm sidebar-nav-sub-ico"></span>
+            </a>
+            <ul class="sidebar-nav sidebar-nav-sub" style="display: block">
+                <li class="sidebar-nav-link" >
+                    <a href="/webapp/threshold">
+                        <span class="am-icon-angle-right sidebar-nav-link-logo"></span> 告警阈值管理
+                    </a>
+                </li>
+
+                <li class="sidebar-nav-link">
+                    <a href="/webapp/warnings">
+                        <span class="am-icon-angle-right sidebar-nav-link-logo"></span> 告警管理
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <!--数据查看-->
+        <li class="sidebar-nav-link">
+            <a href="javascript:;" class="sidebar-nav-sub-title">
+                <i class="am-icon-table sidebar-nav-link-logo"></i> 数据查看
+                <span class="am-icon-chevron-down am-fr am-margin-right-sm sidebar-nav-sub-ico"></span>
+            </a>
+            <ul class="sidebar-nav sidebar-nav-sub" style="display: block">
+                <li class="sidebar-nav-link">
+                    <a href="/webapp/gateways">
+                        <span class="am-icon-angle-right sidebar-nav-link-logo"></span> 实时数据查看
+                    </a>
+                </li>
+
+                <li class="sidebar-nav-link">
+                    <a href="/webapp/history">
+                        <span class="am-icon-angle-right sidebar-nav-link-logo"></span> 历史数据与曲线
+                    </a>
+                </li>
+            </ul>
+        </li>
 
     </ul>
 </div>

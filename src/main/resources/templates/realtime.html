@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>实时数据查看</title>
+    <meta name="description" content="实时数据查看">
+    <meta name="keywords" content="index">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <link rel="icon" type="image/png" href="/assets/i/favicon.png">
+    <link rel="apple-touch-icon-precomposed" href="/assets/i/app-icon72x72@2x.png">
+    <meta name="apple-mobile-web-app-title" content="Amaze UI"/>
+    <script src="/assets/js/echarts.min.js"></script>
+    <link rel="stylesheet" href="/assets/css/amazeui.min.css"/>
+    <link rel="stylesheet" href="/assets/css/amazeui.datatables.min.css"/>
+    <link rel="stylesheet" href="/assets/css/app.css">
+    <script src="/assets/js/jquery.min.js"></script>
+
+</head>
+
+<body data-type="widgets">
+<script src="/assets/js/theme.js"></script>
+<div class="am-g tpl-g">
+    <div th:include="header::header"></div>
+    <!-- 风格切换 -->
+    <div class="tpl-skiner">
+        <div class="tpl-skiner-toggle am-icon-cog">
+        </div>
+        <div class="tpl-skiner-content">
+            <div class="tpl-skiner-content-title">
+                选择主题
+            </div>
+            <div class="tpl-skiner-content-bar">
+                <span class="skiner-color skiner-white" data-color="theme-white"></span>
+                <span class="skiner-color skiner-black" data-color="theme-black"></span>
+            </div>
+        </div>
+    </div>
+    <!-- 侧边导航栏 -->
+    <div th:include="sidebar"></div>
+
+
+    <!-- 内容区域 -->
+    <div class="tpl-content-wrapper">
+        <div class="row-content am-cf">
+            <div class="row">
+                <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
+                    <div class="widget am-cf">
+                        <div class="widget-head am-cf">
+                            <div class="widget-title  am-cf">实时数据查看</div>
+
+
+                        </div>
+                        <div class="widget-body  am-fr">
+
+                            <form class="am-form tpl-form-line-form row">
+                                <div class="row am-cf">
+                                    <div class="am-form-group am-u-md-4 am-u-lg-4 am-u-sm-12 am-u-xs-12">
+                                        <label for="gateway" class="am-form-label">网关</label>
+                                        <select name="gateway" id="gateway">
+                                            <option th:each="gateway : ${gateways}" th:value="${gateway.id}"
+                                                    th:text="|${gateway.host}:${gateway.port}|"></option>
+                                        </select>
+                                    </div>
+
+                                    <div class="am-form-group am-u-md-4 am-u-lg-4 am-u-sm-12 am-u-xs-12">
+                                        <label for="node" class="am-form-label">节点</label>
+                                        <select name="node" id="node">
+                                            <option th:each="node :${#numbers.sequence( 1, 64)}" th:value="${node}"
+                                                    th:text="${node}"></option>
+                                        </select>
+                                    </div>
+
+                                    <div class="am-form-group am-u-md-4 am-u-lg-4 am-u-sm-12 am-u-xs-12">
+                                        <label for="chan" class="am-form-label">通道</label>
+                                        <select name="chan" id="chan">
+                                            <option th:each="chan :${#numbers.sequence( 0, 31)}" th:value="${chan}"
+                                                    th:text="${chan}"></option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <button type="button" id="query">查询</button>
+                            </form>
+                            <div id="graph" style="width: 100%;height:400px;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+<script src="/assets/js/amazeui.min.js"></script>
+<script src="/assets/js/amazeui.datatables.min.js"></script>
+<script src="/assets/js/dataTables.responsive.min.js"></script>
+<script src="/assets/js/app.js"></script>
+<link rel="stylesheet" type="text/css" href="/assets/css/jquery.datetimepicker.css" />
+<script src="/jquery.js"></script>
+<script src="/assets/js/jquery.datetimepicker.full.min.js"></script>
+<script type="text/javascript">
+    var myChart = echarts.init(document.getElementById('graph'));
+    function graph(url) {
+        jQuery.getJSON(url, function (dataJson) {
+            var xData = Array();
+            var yData = Array();
+            dataJson.forEach(function (e) {
+                xData.push(e.created);
+                yData.push(e.realValue);
+            });
+            // 基于准备好的dom，初始化echarts实例
+
+
+            // 指定图表的配置项和数据
+            var option = {
+                title : {
+                    text: '趋势',
+                },
+                tooltip : {
+                    trigger: 'axis'
+                },
+                legend: {
+                    data:['趋势值']
+                },
+                toolbox: {
+                    show : true,
+                    feature : {
+                        mark : {show: true},
+                        dataView : {show: true, readOnly: false},
+                        magicType : {show: true, type: ['line', 'bar', 'stack', 'tiled']},
+                        restore : {show: true},
+                        saveAsImage : {show: true}
+                    }
+                },
+                calculable : true,
+                xAxis : [
+                    {
+                        type : 'category',
+                        boundaryGap : false,
+                        data : xData,
+                    }
+                ],
+                yAxis : [
+                    {
+                        type : 'value'
+                    }
+                ],
+                series : [
+                    {
+                        name:'读数',
+                        type:'line',
+                        smooth:true,
+                        itemStyle: {normal: {areaStyle: {type: 'default'}}},
+                        data:yData,
+                    },
+                ]
+            };
+
+            // 使用刚指定的配置项和数据显示图表。
+            myChart.setOption(option);
+        });
+    }
+</script>
+<script>
+    $(document).ready(function () {
+
+        $("#query").click(function () {
+            var gateway = $("#gateway option:selected").val();
+            var node = $("#node option:selected").val();
+            var chan = $("#chan option:selected").val();
+            var historyType = $("input[name='historyType']:checked").val();
+            var date = $("#date").val();
+            var start = $("#datetime1").val();
+            var end = $("#datetime2").val();
+
+            var url = "/webapp/realtime?gatewayid=" + gateway + "&nodeaddr=" + node + "&channel=" + chan + "&historyType=" + historyType;
+
+            graph(url);
+        })
+
+
+    });
+</script>
+
+</body>
+
+</html>
