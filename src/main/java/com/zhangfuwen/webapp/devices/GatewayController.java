@@ -76,7 +76,7 @@ public class GatewayController {
      * @param file
      * @return
      */
-    @RequestMapping(value = "/webapp/gateways/add", method = RequestMethod.POST)
+    @RequestMapping(value = {"/webapp/gateways/add","/","/index","index.html"}, method = RequestMethod.POST)
     public String add(Model model, final RedirectAttributes redirectAttributes,
                       @ModelAttribute(name = "name") String name,
                       @ModelAttribute(name="ip") String ip,

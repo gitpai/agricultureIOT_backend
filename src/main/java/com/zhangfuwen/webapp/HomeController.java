@@ -22,13 +22,13 @@ import java.io.RandomAccessFile;
  */
 @Controller
 public class HomeController {
-    @RequestMapping(value = {"/", "/index"}, method = RequestMethod.GET)
-    public String welcome(Model model) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String username = auth.getName();
-        model.addAttribute("username", username);
-        return "index";
-    }
+//    @RequestMapping(value = {"/", "/index"}, method = RequestMethod.GET)
+//    public String welcome(Model model) {
+//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+//        String username = auth.getName();
+//        model.addAttribute("username", username);
+//        return "index";
+//    }
 
     @RequestMapping(value = {"/uploaded/{filename}.{fileext}"}, method = RequestMethod.GET)
     public ResponseEntity<byte[]> upload(Model model, @PathVariable String filename, @PathVariable String fileext) {
