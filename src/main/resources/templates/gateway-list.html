@@ -94,7 +94,7 @@
                                         </td>
                                         <td th:text="${gateway.desc}"></td>
                                         <td >
-                                            <a th:href="'/uploaded/'+${gateway.pic}" th:text="${gateway.pic}"></a>
+                                            <span onclick="showImage(this)" th:attr="data-picurl='/uploaded/'+${gateway.pic}" th:text="${gateway.pic}"></span>
                                         </td>
                                         <td>
                                             <a class="am-btn am-btn-default"
@@ -130,6 +130,14 @@
                 </div>
             </div>
         </div>
+        <!--图片弹出框-->
+        <div id="image-modal-dialog" style="max-width:80%; max-height: 80%; margin: 30px auto;" class="am-modal am-modal-prompt" tabindex="-1">
+            <div class="am-modal-dialog" style="max-width: 100%; max-height: 100%; ">
+                <div class="am-modal-hd">
+                    <div id="pic-show" style=" max-width: 100%; max-height: 100%;"></div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 </div>
@@ -137,6 +145,15 @@
 <script src="/assets/js/amazeui.datatables.min.js"></script>
 <script src="/assets/js/dataTables.responsive.min.js"></script>
 <script src="/assets/js/app.js"></script>
+<style>
+    .am-modal::before {
+        /*content: "\200B";*/
+        /*display: inline-block;*/
+        display: none;
+        height: 0%;
+        vertical-align: middle;
+    }
+</style>
 <script>
     function showMap(e) {
         var position =$(e).data('position');
@@ -157,6 +174,29 @@
 
 
     }
+    function showImage(e) {
+        var url = $(e).data('picurl');
+        console.log(url);
+        var img = new Image();
+        img.src =url;
+        var w = img.width;
+        var h = img.height;
+        if(img.width > $("#image-modal-dialog").width())
+        {
+            $("#image-modal-dialog .am-modal-dialog").width("100%");
+        }
+        $("#pic-show").html("<image style='max-width: 100%; max-height: 100%;' src='" +url + "'/>");
+        $("#image-modal-dialog").modal({
+            relatedTarget: this,
+            onConfirm: function () {
+
+            },
+            onCancel: function () {
+
+            }
+        });
+    }
+
 </script>
 </body>
 
