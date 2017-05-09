@@ -1,10 +1,16 @@
-create database gateway character set utf8;
+create database gateway1 character set utf8;
 use gateway;
 
 
 
 insert  into `sys_role`(`id`,`name`) values (1,'ROLE_CREATOR'),(2,'ROLE_ADMIN'),(3,'ROLE_EXPERT');
 INSERT INTO `sys_role`(`id`,`name`) values(4,'ROLE_USER');
+INSERT INTO sys_user(id, username, password) VALUES (
+  1,'root123','$2a$10$qOwqRGybCT4cQwD1vkhfD.eFIWc1P2e74irm750znQ3VlLaKl5Wg2');
+
+INSERT INTO sys_user_roles(sys_user_id, roles_id) VALUES (
+  1,1
+);
 
 
 insert into `t_gateway`(`name`,`ip`, `port`, `max_nodes`, `max_channels`,`poll_interval`,`X`,`Y`) values (
@@ -18,10 +24,10 @@ insert into `t_gateway`(`name`,`ip`, `port`, `max_nodes`, `max_channels`,`poll_i
 insert into `t_gateway`(`name`,`ip`, `port`, `max_nodes`, `max_channels`,`poll_interval`,`X`,`Y`) values (
   'gateway 5','192.168.1.5', 505, 64,32,30,13.5,14.5);
 
-INSERT INTO gateway.sys_user(id, username, password) VALUES (
+INSERT INTO sys_user(id, username, password) VALUES (
   1,'root123','$2a$10$qOwqRGybCT4cQwD1vkhfD.eFIWc1P2e74irm750znQ3VlLaKl5Wg2');
 
-INSERT INTO gateway.sys_user_roles(sys_user_id, roles_id) VALUES (
+INSERT INTO sys_user_roles(sys_user_id, roles_id) VALUES (
     1,1
 );
 

@@ -26,3 +26,4 @@ build/distributions/
 ```bash
 java -cp build/distributions/gatewayDataParse-1.0-SNAPSHOT/lib/ -jar build/distributions/gatewayDataParse-1.0-SNAPSHOT/gatewayDataParse-1.0-SNAPSHOT.jar 
 ```
+
