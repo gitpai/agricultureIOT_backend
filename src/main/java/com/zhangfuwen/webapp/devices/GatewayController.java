@@ -102,7 +102,7 @@ public class GatewayController {
         }
 
         gatewayRepository.save(gateway);
-        CollectorTask.gateways = null;
+        CollectorTask.setGateways(null);
         CollectorTask.gatewayLock.unlock();
         String referer = "/webapp/gateways";
         redirectAttributes.addFlashAttribute("message", "添加成功");
@@ -127,7 +127,7 @@ public class GatewayController {
 
         CollectorTask.gatewayLock.lock();
         gatewayRepository.delete(gatewayid);
-        CollectorTask.gateways = null;
+        CollectorTask.setGateways(null);
         CollectorTask.gatewayLock.unlock();
         String referer = "/webapp/gateways";
         redirectAttributes.addFlashAttribute("message", "删除成功");

@@ -22,11 +22,11 @@ import java.util.concurrent.locks.ReentrantLock;
 public class CollectorTask {
     public static final Config config = Config.getInstance();
     //该值置空时即重新从数据库读取列表
-    public static volatile Iterable<Gateway> gateways = null;
-    public static volatile Lock gatewayLock;
+    private static volatile Iterable<Gateway> gateways = null;
+    public static final Lock gatewayLock = new ReentrantLock();
 
-    static {
-        gatewayLock = new ReentrantLock();
+    public static void setGateways(Iterable<Gateway> gateways) {
+        CollectorTask.gateways = gateways;
     }
 
     @Autowired
