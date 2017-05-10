@@ -32,8 +32,8 @@ public class HomeController {
 
     @RequestMapping(value = {"/uploaded/{filename}.{fileext}"}, method = RequestMethod.GET)
     public ResponseEntity<byte[]> upload(Model model, @PathVariable String filename, @PathVariable String fileext) {
-        try {
-            RandomAccessFile f = new RandomAccessFile("./upload-dir/" + filename+"."+fileext, "r");
+        String filePath = "./upload-dir/" + filename+"."+fileext;
+        try (RandomAccessFile f = new RandomAccessFile(filePath, "r")) {
             byte[] b = new byte[(int) f.length()];
             f.readFully(b);
             final HttpHeaders headers = new HttpHeaders();

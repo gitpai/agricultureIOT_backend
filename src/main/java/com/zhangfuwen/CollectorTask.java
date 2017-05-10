@@ -20,13 +20,13 @@ import java.util.concurrent.locks.ReentrantLock;
 @EnableScheduling
 @Component
 public class CollectorTask {
-    public static Config config;
+    public static final Config config = Config.getInstance();
     //该值置空时即重新从数据库读取列表
-    public static Iterable<Gateway> gateways=null;
-    public static Lock gatewayLock;
+    public static volatile Iterable<Gateway> gateways = null;
+    public static volatile Lock gatewayLock;
+
     static {
         gatewayLock = new ReentrantLock();
-        config = Config.getInstance();
     }
 
     @Autowired
@@ -45,26 +45,20 @@ public class CollectorTask {
 
     @Scheduled(fixedRate = 1000)
     public void updateSensor() {
-
-//        System.out.println("scheduled");
         gatewayLock.lock();
-        if(gateways==null) {
+        if (gateways == null) {
             gateways = gatewayRepository.findAll();
         }
         for (Gateway gateway : gateways) {
-            if(gateway.lastCollected==null)
-            {
+            if (gateway.lastCollected == null) {
                 gateway.lastCollected = new Timestamp((new Date()).getTime());
             }
-            if( (new Date()).getTime() - gateway.lastCollected.getTime() > gateway.getInterval()*1000  )
-            {
+            if ((new Date()).getTime() - gateway.lastCollected.getTime() > gateway.getInterval() * 1000) {
                 gateway.lastCollected = new Timestamp(((new Date()).getTime()));
-            }
-            else
-            {
+            } else {
                 continue;
             }
-            System.out.println("interval "+gateway.getInterval()+"collecting for gateway " + gateway.getHost() + ":" + gateway.getPort());
+            System.out.println("interval " + gateway.getInterval() + "collecting for gateway " + gateway.getHost() + ":" + gateway.getPort());
             if (!config.isDevMode()) {
                 try {
                     gateway.init();

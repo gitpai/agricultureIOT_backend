@@ -20,12 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Table(name = "t_sensor")
 public class CoilOrSensor {
     private static final Logger logger = LoggerFactory.getLogger(CoilOrSensor.class);
-    public static Map<Byte, String> sensorTypeMap = new HashMap<Byte, String>();
-
-    static {
-        //TODO: table not complete
-        sensorTypeMap = Utils.getSensorTypeMap();
-    }
+    public static final Map<Byte, String> sensorTypeMap = Utils.getSensorTypeMap();
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
