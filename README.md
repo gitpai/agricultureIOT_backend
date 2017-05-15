@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 #gatewayDataParse
 
 
@@ -27,3 +28,7 @@ build/distributions/
 java -cp build/distributions/gatewayDataParse-1.0-SNAPSHOT/lib/ -jar build/distributions/gatewayDataParse-1.0-SNAPSHOT/gatewayDataParse-1.0-SNAPSHOT.jar 
 ```
 
+=======
+# agricultureIOT_backend
+the agriculture IOT backend,implemented by springboot,JPA,Hibernate,the frontend implemented by AMUSE UI
+>>>>>>> branch 'master' of git@github.com:gitpai/agricultureIOT_backend.git
